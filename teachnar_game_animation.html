@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Game Characters Move — A Teachnar</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f5f0e8;
+    --cream: #ede7d5;
+    --rust: #b84a2e;
+    --gold: #c8963e;
+    --slate: #4a4840;
+    --pale: #f9f6ef;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.8;
+    padding: 0;
+  }
+
+  /* ── MASTHEAD ── */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 80px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent, transparent 30px,
+      rgba(255,255,255,0.02) 30px, rgba(255,255,255,0.02) 31px
+    );
+    pointer-events: none;
+  }
+  .kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    opacity: 0.9;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    font-weight: 700;
+    line-height: 1.12;
+    max-width: 760px;
+    margin: 0 auto 24px;
+  }
+  header h1 em {
+    color: var(--gold);
+    font-style: italic;
+  }
+  .subhead {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: rgba(245,240,232,0.65);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .rule-gold {
+    width: 60px; height: 2px;
+    background: var(--gold);
+    margin: 32px auto 0;
+  }
+
+  /* ── LAYOUT ── */
+  .page {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 60px 32px 120px;
+  }
+
+  /* ── SECTION LABELS ── */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--rust);
+    display: block;
+    margin-bottom: 10px;
+    margin-top: 72px;
+  }
+
+  /* ── HEADINGS ── */
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 24px;
+    color: var(--ink);
+  }
+  h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--slate);
+    margin: 36px 0 12px;
+  }
+
+  /* ── BODY TEXT ── */
+  p { margin-bottom: 1.4em; }
+  p + p { text-indent: 1.5em; }
+
+  /* ── PULL QUOTES ── */
+  blockquote {
+    border-left: 3px solid var(--gold);
+    background: var(--cream);
+    padding: 20px 28px;
+    margin: 40px 0;
+    font-style: italic;
+    font-size: 1.08rem;
+    color: var(--slate);
+    position: relative;
+  }
+  blockquote::before {
+    content: '\201C';
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    color: var(--gold);
+    opacity: 0.25;
+    position: absolute;
+    top: -10px; left: 10px;
+    line-height: 1;
+  }
+
+  /* ── PROOF BLOCKS ── */
+  .proof {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 24px 28px;
+    margin: 36px 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    position: relative;
+  }
+  .proof .proof-label {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 10px;
+  }
+  .proof code { color: #a8d8a8; }
+  .proof em { color: var(--gold); font-style: normal; }
+
+  /* ── ASSUMPTION CALLOUT ── */
+  .assume {
+    border: 1.5px solid var(--rust);
+    padding: 16px 22px;
+    margin: 32px 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--rust);
+    line-height: 1.6;
+  }
+  .assume::before {
+    content: 'HIDDEN ASSUMPTION';
+    display: block;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
+
+  /* ── COMPARISON TABLE ── */
+  .compare {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 36px 0;
+    font-size: 0.88rem;
+    font-family: 'DM Mono', monospace;
+  }
+  .compare th {
+    background: var(--ink);
+    color: var(--gold);
+    text-align: left;
+    padding: 10px 14px;
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .compare td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--cream);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .compare tr:nth-child(even) td { background: var(--pale); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid #ccc7b8;
+    margin: 56px 0;
+  }
+
+  /* ── SYNTHESIS BOX ── */
+  .synthesis {
+    background: var(--cream);
+    border-top: 3px solid var(--ink);
+    padding: 32px 36px;
+    margin: 56px 0 0;
+  }
+  .synthesis h4 {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 16px;
+  }
+  .synthesis p { margin-bottom: 0.8em; }
+  .synthesis p:last-child { margin-bottom: 0; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: rgba(245,240,232,0.4);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-align: center;
+    padding: 36px;
+  }
+
+  /* ── ANIMATION ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .page > * {
+    animation: fadeUp 0.5s ease both;
+  }
+  .page > *:nth-child(1) { animation-delay: 0.05s; }
+  .page > *:nth-child(2) { animation-delay: 0.10s; }
+  .page > *:nth-child(3) { animation-delay: 0.15s; }
+  .page > *:nth-child(n+4) { animation-delay: 0.20s; }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="kicker">Teachnar · Game Character Animation</p>
+  <h1>Why Your Character Doesn't <em>Fall Through the Floor</em><br>— and Everything Else</h1>
+  <p class="subhead">A logical progression from first principles to production pipelines, without shortcuts.</p>
+  <div class="rule-gold"></div>
+</header>
+
+<div class="page">
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SECTION 1: FOUNDATION -->
+  <!-- ══════════════════════════════════════ -->
+  <span class="section-label">I. Foundation</span>
+  <h2>Start with what you already know: things fall, then slow down.</h2>
+
+  <p>Every time you've watched something fall — a ball, a dropped mug, your own keys — you understood it before you had words for it. Heavy things resist change. Light things snap. Slow-ins and slow-outs aren't design jargon; they're what your eye expects from a world governed by momentum.</p>
+
+  <p>This is where animation starts. Disney animators formalized it decades ago as the <strong>12 Principles of Animation</strong>: squash and stretch, anticipation, staging, timing, arcs, follow-through, and so on. The principles don't describe a style. They describe physics translated into craft. When a character's arm rises, it follows an arc — not because arcs look nice, but because a joint rotating at a pivot <em>produces</em> an arc.</p>
+
+  <blockquote>
+    The 12 principles don't describe how cartoons should feel. They describe how bodies actually move, and what happens when you remove those properties and try to fake them back in.
+  </blockquote>
+
+  <p>Game animation inherits all of this — then immediately has to compromise it. A punch that takes 20 frames to wind up feels real. It also feels unresponsive in a fighting game where the player expects a result in 6. So the animator's first real skill isn't applying the principles. It's knowing <em>which principle to bend</em> and by how much before the lie becomes visible.</p>
+
+  <div class="assume">
+    Timing that reads as "natural" in a film plays as "broken" in an interactive context. The 12 principles assume a passive observer. Games have none.
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SECTION 2: DEVELOPMENT -->
+  <!-- ══════════════════════════════════════ -->
+  <span class="section-label">II. Development — The Skeleton Under the Skin</span>
+  <h2>From mesh to motion: what the pipeline is actually doing.</h2>
+
+  <p>Here's a fact that surprises many people new to game development: the character model you see on screen is not what moves. What moves is an invisible skeleton — a hierarchy of bones, parented from pelvis outward, driven by rotation values. The visible mesh is simply along for the ride, deformed by the skeleton beneath it.</p>
+
+  <p>This matters because it explains why rigging is a design problem, not just a technical one. Where you place a joint, how you orient its rotation axis, which bones you add and which you omit — these are decisions with downstream consequences across <em>every animation that character will ever run</em>.</p>
+
+  <h3>The skinning problem: linear blend and why it fails at the elbow</h3>
+
+  <p>Once you have a skeleton, you bind the mesh to it — a process called skinning. Each vertex on the mesh is assigned a set of weights: this vertex is 70% influenced by the forearm bone, 30% by the wrist. When the forearm rotates, the vertex moves proportionally.</p>
+
+  <p>This works fine for most of the body. It fails at the elbow. When you twist a forearm 180 degrees using standard linear blend skinning, the mesh collapses inward — the "candy-wrapper" effect. The math averages two rotations in a way that destroys volume. The solutions are either dual quaternion skinning (which preserves volume but costs more GPU cycles) or adding <em>helper joints</em>: two or three extra bones between the elbow and wrist that distribute the rotation gradually rather than applying it all at once.</p>
+
+  <div class="proof">
+    <span class="proof-label">Worked Example · Forearm Twist</span>
+    <em>Standard linear blend:</em>
+    <br>Forearm rotates 180° → vertices at midpoint average both rotations → <code>volume collapses ~40%</code>
+    <br><br>
+    <em>With 3 helper joints spaced evenly:</em>
+    <br>Each joint rotates 60° → volume preserved → <code>deformation reads as muscle twist</code>
+    <br><br>
+    Cost: 3 extra bones per forearm, each drawing from the engine's bone budget (typically 60–80 per skeleton).
+  </div>
+
+  <p>Naughty Dog used exactly this approach for Ellie's wrist rig in <em>The Last of Us</em>: three helper joints on each forearm, preserving volume under extreme bend. That's not special technology. It's solving the linear blend problem with geometry and bone budget.</p>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SECTION 3: CONCEPTS BUILDING -->
+  <!-- ══════════════════════════════════════ -->
+  <span class="section-label">III. Concepts — FK, IK, and Why You Need Both</span>
+  <h2>Two ways to pose a limb. Neither is wrong. Both are incomplete.</h2>
+
+  <p>Forward kinematics (FK) means you rotate the shoulder, then the elbow, then the wrist — parent to child, down the chain. It's intuitive for swinging motions, arcs, anything where the movement originates from the body's core.</p>
+
+  <p>Inverse kinematics (IK) means you place the hand where you want it, and a solver works backward to figure out the elbow and shoulder angles required. This is indispensable when you need a foot to stay planted on uneven terrain, or a hand to grip an object that isn't moving with the character.</p>
+
+  <p>The catch with IK: it can <em>pop</em>. If an IK target moves outside the chain's reach, the solver has to pick a solution — often a sudden flip of the elbow. It can also produce unnatural poses because it doesn't know what the pose is <em>for</em>. Runtime IK solvers like FABRIK (Forward-And-Backward Reaching IK) or CCD (Cyclic Coordinate Descent) iterate toward a solution frame by frame, which is why they can feel slightly floaty if blend weights aren't carefully managed.</p>
+
+  <table class="compare">
+    <thead>
+      <tr><th>Method</th><th>Best For</th><th>Breaks When</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Forward Kinematics (FK)</td>
+        <td>Arcs, swings, whole-body movement</td>
+        <td>You need a foot or hand fixed in world space</td>
+      </tr>
+      <tr>
+        <td>Inverse Kinematics (IK)</td>
+        <td>Ground contact, gripping, aiming</td>
+        <td>Target leaves reach; no pole vector set; over-blended</td>
+      </tr>
+      <tr>
+        <td>Blended FK/IK</td>
+        <td>Production rigs; most game characters</td>
+        <td>The switch isn't matched — causes a pop on transition</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Production rigs expose both, usually with a blend attribute so animators can choose. The unspoken rule: FK for things that originate from the body's own movement, IK for things that respond to the world. A punch is FK. Placing a hand on a door handle is IK.</p>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SECTION 4: MOCAP -->
+  <!-- ══════════════════════════════════════ -->
+  <span class="section-label">IV. Worked Example — Motion Capture as a Speed/Accuracy Tradeoff</span>
+  <h2>Mocap doesn't solve animation. It changes where the work goes.</h2>
+
+  <p>Suppose you need 200 locomotion clips for a combat game. Keyframing them all by hand would take months. Motion capture can record a stunt actor performing each move in a day — but what you get back is raw data, not finished animation. The cleanup is the job.</p>
+
+  <p>Consider the tradeoffs between the three main capture systems:</p>
+
+  <table class="compare">
+    <thead>
+      <tr><th>Type</th><th>Accuracy</th><th>Setup</th><th>Where It Breaks</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Passive Optical (Vicon, OptiTrack)</td>
+        <td>Very high — finger-level detail possible</td>
+        <td>45+ min; dedicated multi-camera studio</td>
+        <td>Marker occlusion; actors can't go outside</td>
+      </tr>
+      <tr>
+        <td>Inertial (Xsens, Rokoko)</td>
+        <td>High; degrades with magnetic interference</td>
+        <td>15–30 min; anywhere</td>
+        <td>Drift accumulation over long takes</td>
+      </tr>
+      <tr>
+        <td>Markerless / AI (ARKit, OpenPose)</td>
+        <td>Low–Medium; fingers unreliable</td>
+        <td>Just a camera</td>
+        <td>Everything subtle — weight shifts, breath, fine wrist work</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>The logical consequence: markerless capture's low setup cost doesn't mean low total cost. It means the work moves to cleanup, which costs animator time. For a studio with a capture stage and ten weeks of mocap scheduled, optical wins. For an indie team making one character, inertial is likely the right call. Neither is objectively better — they trade capital cost against labor cost.</p>
+
+  <div class="assume">
+    "We'll just use mocap" assumes the captured data maps cleanly onto the game rig. A tall actor's proportions won't match a short character's skeleton. Retargeting solves this — but retargeting an arm that should reach a table will place the hand at the wrong height unless you also run foot IK and spine adjustment. Mocap creates new problems precisely where it solves old ones.
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SECTION 5: WHERE THE SIMPLE MODEL FAILS -->
+  <!-- ══════════════════════════════════════ -->
+  <span class="section-label">V. Where It Breaks — Real-Time Constraints</span>
+  <h2>The model works in the editor. Now run it on hardware.</h2>
+
+  <p>Everything described so far assumes unlimited processing time. Games run at 60 frames per second on target hardware that also has to render environments, simulate physics, run AI, and stream audio. Animation doesn't get the whole CPU. It gets a slice.</p>
+
+  <p>This produces a set of engineering tradeoffs that directly affect artistic decisions:</p>
+
+  <p><strong>Animation compression</strong> reduces keyframe data by quantizing curve values — storing rotations in 16 bits instead of 32, removing frames where the curve is nearly flat. The tradeoff is small but real: slight inaccuracies in curve shape, most visible in slow, subtle motion (a character quietly breathing).</p>
+
+  <p><strong>Level-of-Detail (LOD)</strong> applies to animation the same way it applies to geometry. A character 80 meters away doesn't need finger bone updates. Dropping those bones from the update loop saves CPU. The risk: if the transition distance is tuned wrong, characters pop as they approach.</p>
+
+  <p><strong>GPU skinning</strong> offloads the deformation computation from the CPU to the GPU, which is better suited to the parallel math involved. This matters most in crowd scenes — 200 characters skinned on CPU is expensive; on GPU it's tractable. The constraint is shader support and the overhead of managing the data transfer.</p>
+
+  <p><strong>Root motion</strong> is the decision to let the animation itself move the character in world space, rather than code. A run cycle with root motion embedded will translate the character's position in sync with the footfall. Without it, the movement is code-driven and the animator must match the visual to a speed they don't control. Root motion gives animators ownership of the locomotion feel; it costs synchronization complexity with physics and pathfinding systems.</p>
+
+  <hr class="divider">
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SECTION 6: SYNTHESIS -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="synthesis">
+    <h4>Synthesis — What's Proven, What's Still Open</h4>
+
+    <p><strong>What's proven:</strong> The animation pipeline is a chain of decisions, each constraining the next. Joint placement affects skinning quality. Skinning method affects GPU cost. Bone count affects mocap retargeting viability. Compression settings affect subtle expressiveness. None of these are independent.</p>
+
+    <p><strong>What follows logically:</strong> Ubisoft's motion-matching system — which replaced state machines with a database of mocap clips selected frame-by-frame — didn't emerge from a desire for novelty. It emerged from the combinatorial explosion of states in a game like <em>Assassin's Creed</em>, where traditional graphs can't handle the branching. If your locomotion space is large enough, the cost of curating a massive mocap database is cheaper than the cost of designing and maintaining every transition manually.</p>
+
+    <p><strong>What's still open:</strong> The line between procedural animation and keyframed animation is being actively redrawn. Runtime IK, physics-based secondary motion, and machine-learning pose prediction are all eliminating work that animators once did by hand — while simultaneously raising questions about what "animator intent" means when the engine is improvising. That question doesn't have a clean answer yet.</p>
+  </div>
+
+</div>
+
+<footer>
+  Teachnar · Video Game Character Animation · ISE Format · zebonastic.substack.com
+</footer>
+
+</body>
+</html>
