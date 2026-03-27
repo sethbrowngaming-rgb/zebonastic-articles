@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unity C# — Full Course</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f1a;
+    --surface: #13162a;
+    --surface2: #1a1e35;
+    --border: #2a2f52;
+    --accent: #7c3aed;
+    --accent2: #06b6d4;
+    --accent3: #f59e0b;
+    --green: #10b981;
+    --red: #ef4444;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --code-bg: #0a0c18;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* SIDEBAR */
+  #sidebar {
+    width: 280px;
+    min-height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0;
+    height: 100%;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform .3s ease;
+  }
+  #sidebar-header {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, #1e1040 0%, #0d1a40 100%);
+  }
+  #sidebar-header h1 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -.01em;
+  }
+  #sidebar-header p { font-size: .75rem; color: var(--muted); margin-top: 4px; font-family: 'Space Mono', monospace; }
+  .progress-bar-wrap { margin-top: 12px; background: var(--border); border-radius: 99px; height: 5px; }
+  .progress-bar { height: 5px; border-radius: 99px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .4s; width: 0%; }
+  .progress-label { font-size: .7rem; color: var(--muted); margin-top: 5px; font-family: 'Space Mono', monospace; }
+
+  .section-group { padding: 10px 0; }
+  .section-group-title {
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 6px 20px 4px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 20px;
+    cursor: pointer;
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--muted);
+    border-left: 3px solid transparent;
+    transition: all .2s;
+  }
+  .nav-item:hover { color: var(--text); background: var(--surface2); }
+  .nav-item.active { color: #fff; border-left-color: var(--accent); background: var(--surface2); }
+  .nav-item.done { color: var(--green); }
+  .nav-item .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--border); flex-shrink: 0;
+  }
+  .nav-item.active .dot { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+  .nav-item.done .dot { background: var(--green); }
+
+  /* MAIN */
+  #main {
+    margin-left: 280px;
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  #topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    position: sticky;
+    top: 0; z-index: 50;
+  }
+  #topbar .lesson-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: .7rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    color: var(--accent2);
+  }
+  #topbar .lesson-title { font-size: 1rem; font-weight: 700; }
+  .nav-btns { display: flex; gap: 8px; }
+  .nav-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 16px;
+    font-family: 'Syne', sans-serif;
+    font-size: .8rem;
+    font-weight: 700;
+    color: var(--text);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .nav-btn.primary:hover { background: #6d28d9; }
+  .nav-btn:disabled { opacity: .35; cursor: default; }
+
+  /* CONTENT */
+  #lesson-content {
+    padding: 40px 60px 80px;
+    max-width: 860px;
+    animation: fadeIn .4s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .lesson-hero {
+    margin-bottom: 36px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .lesson-tag {
+    display: inline-block;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+  }
+  .lesson-hero h2 { font-size: 2rem; font-weight: 800; line-height: 1.15; color: #fff; margin-bottom: 10px; }
+  .lesson-hero .desc { font-size: .95rem; color: var(--muted); line-height: 1.6; max-width: 600px; }
+
+  h3 { font-size: 1.15rem; font-weight: 700; color: #fff; margin: 28px 0 10px; }
+  h4 { font-size: .95rem; font-weight: 700; color: var(--accent2); margin: 20px 0 8px; }
+  p { font-size: .9rem; line-height: 1.75; color: #c0cce0; margin-bottom: 12px; }
+  ul, ol { padding-left: 22px; margin-bottom: 14px; }
+  li { font-size: .88rem; line-height: 1.7; color: #c0cce0; margin-bottom: 4px; }
+
+  /* CODE BLOCKS */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 16px 0 20px;
+    overflow: hidden;
+    font-family: 'Space Mono', monospace;
+  }
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 16px;
+  }
+  .code-lang {
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent2);
+  }
+  .copy-btn {
+    background: none; border: none;
+    color: var(--muted); font-size: .72rem;
+    cursor: pointer; font-family: 'Space Mono', monospace;
+    transition: color .2s;
+  }
+  .copy-btn:hover { color: var(--accent2); }
+  pre {
+    padding: 20px;
+    overflow-x: auto;
+    font-size: .8rem;
+    line-height: 1.75;
+  }
+  /* Syntax highlighting */
+  .kw { color: #c792ea; }
+  .type { color: #82aaff; }
+  .str { color: #c3e88d; }
+  .num { color: #f78c6c; }
+  .cmt { color: #546e7a; font-style: italic; }
+  .fn { color: #82aaff; }
+  .cls { color: #ffcb6b; }
+  .var { color: #eeffff; }
+
+  /* CALLOUT */
+  .callout {
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    display: flex;
+    gap: 12px;
+    font-size: .88rem;
+    line-height: 1.6;
+  }
+  .callout.info { background: #0c1a3a; border: 1px solid #1e3a8a; }
+  .callout.tip { background: #0c2a1a; border: 1px solid #064e3b; }
+  .callout.warn { background: #2a1a04; border: 1px solid #78350f; }
+  .callout.compare { background: #1a0c2a; border: 1px solid #4c1d95; }
+  .callout-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .callout p { margin: 0; color: #b0c4de; }
+  .callout strong { color: #fff; }
+
+  /* QUIZ */
+  .quiz-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 28px 0;
+  }
+  .quiz-box h4 { margin-top: 0; color: var(--accent3); }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+  .quiz-opt {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: .85rem;
+    font-family: 'Space Mono', monospace;
+    color: var(--text);
+    transition: all .2s;
+    text-align: left;
+  }
+  .quiz-opt:hover { border-color: var(--accent); color: var(--accent); }
+  .quiz-opt.correct { border-color: var(--green); color: var(--green); background: #0c2a1a; }
+  .quiz-opt.wrong { border-color: var(--red); color: var(--red); background: #2a0c0c; }
+  .quiz-feedback {
+    margin-top: 12px;
+    font-size: .82rem;
+    font-family: 'Space Mono', monospace;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { color: var(--green); }
+  .quiz-feedback.bad { color: var(--red); }
+
+  /* COMPLETION BADGE */
+  .complete-bar {
+    margin-top: 36px;
+    background: linear-gradient(135deg, #1e1040 0%, #0d2040 100%);
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .complete-bar .icon { font-size: 2rem; }
+  .complete-bar h4 { color: #fff; margin: 0 0 4px; }
+  .complete-bar p { color: var(--muted); margin: 0; font-size: .82rem; }
+  .mark-done-btn {
+    margin-left: auto;
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: .85rem;
+    color: #fff;
+    cursor: pointer;
+    transition: background .2s;
+    flex-shrink: 0;
+  }
+  .mark-done-btn:hover { background: #6d28d9; }
+  .mark-done-btn.done { background: var(--green); }
+
+  /* COMPARE TABLE */
+  .cmp-table { width: 100%; border-collapse: collapse; margin: 14px 0 20px; font-size: .82rem; }
+  .cmp-table th { background: var(--surface2); color: var(--accent2); padding: 8px 14px; border: 1px solid var(--border); font-family: 'Space Mono', monospace; font-size: .72rem; text-align: left; }
+  .cmp-table td { padding: 8px 14px; border: 1px solid var(--border); color: #c0cce0; }
+  .cmp-table tr:nth-child(even) td { background: #0e1020; }
+
+  @media (max-width: 780px) {
+    #sidebar { transform: translateX(-100%); }
+    #sidebar.open { transform: translateX(0); }
+    #main { margin-left: 0; }
+    #lesson-content { padding: 24px 20px 60px; }
+    .lesson-hero h2 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <h1>🎮 Unity C# — Full Course</h1>
+    <p>for CodeHS grads</p>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+    <div class="progress-label" id="progress-label">0 / 14 lessons done</div>
+  </div>
+
+  <div class="section-group">
+    <div class="section-group-title">Unit 1 — Foundations</div>
+    <div class="nav-item active" onclick="goto(0)"><span class="dot"></span>1. What is Unity & C#?</div>
+    <div class="nav-item" onclick="goto(1)"><span class="dot"></span>2. Variables & Types</div>
+    <div class="nav-item" onclick="goto(2)"><span class="dot"></span>3. Conditionals & Logic</div>
+    <div class="nav-item" onclick="goto(3)"><span class="dot"></span>4. Loops</div>
+    <div class="nav-item" onclick="goto(4)"><span class="dot"></span>5. Functions / Methods</div>
+  </div>
+  <div class="section-group">
+    <div class="section-group-title">Unit 2 — Unity Specifics</div>
+    <div class="nav-item" onclick="goto(5)"><span class="dot"></span>6. MonoBehaviour & Lifecycle</div>
+    <div class="nav-item" onclick="goto(6)"><span class="dot"></span>7. GameObject & Transform</div>
+    <div class="nav-item" onclick="goto(7)"><span class="dot"></span>8. Input System</div>
+    <div class="nav-item" onclick="goto(8)"><span class="dot"></span>9. Physics & Rigidbody</div>
+    <div class="nav-item" onclick="goto(9)"><span class="dot"></span>10. Collision & Triggers</div>
+  </div>
+  <div class="section-group">
+    <div class="section-group-title">Unit 3 — Intermediate</div>
+    <div class="nav-item" onclick="goto(10)"><span class="dot"></span>11. Classes & Components</div>
+    <div class="nav-item" onclick="goto(11)"><span class="dot"></span>12. Coroutines & Time</div>
+    <div class="nav-item" onclick="goto(12)"><span class="dot"></span>13. UI — Canvas & Text</div>
+    <div class="nav-item" onclick="goto(13)"><span class="dot"></span>14. Scene Management</div>
+  </div>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="lesson-badge" id="top-badge">Lesson 1 of 14</span>
+      <span class="lesson-title" id="top-title">What is Unity & C#?</span>
+    </div>
+    <div class="nav-btns">
+      <button class="nav-btn" id="prev-btn" onclick="prevLesson()" disabled>← Prev</button>
+      <button class="nav-btn primary" id="next-btn" onclick="nextLesson()">Next →</button>
+    </div>
+  </div>
+
+  <div id="lesson-content"></div>
+</div>
+
+<script>
+const lessons = [
+
+// ── 0 ─────────────────────────────────────────────────────────────────────
+{
+  tag: "Unit 1 · Lesson 1",
+  title: "What is Unity & C#?",
+  desc: "Before writing a single line, let's understand what Unity is, how C# fits in, and why it's different from Python or Java.",
+  body: `
+<h3>What is Unity?</h3>
+<p>Unity is a <strong>game engine</strong> — a program that handles rendering graphics, playing audio, simulating physics, detecting input, and a hundred other things so you don't have to write it all from scratch. You write <em>logic scripts</em> in C# that tell Unity what to do.</p>
+
+<div class="callout info"><span class="callout-icon">💡</span><p><strong>Think of it this way:</strong> If Python is writing a story in a blank document, Unity is writing a story inside a themed word processor that automatically adds illustrations, sound effects, and scene transitions.</p></div>
+
+<h3>What is C#?</h3>
+<p>C# ("C sharp") is a <strong>statically-typed, object-oriented language</strong> made by Microsoft. You've done Python (dynamic typing) and a bit of Java — C# is very similar to Java but with nicer syntax in many ways.</p>
+
+<table class="cmp-table">
+  <tr><th>Feature</th><th>Python</th><th>Java</th><th>C# (Unity)</th></tr>
+  <tr><td>Typing</td><td>Dynamic</td><td>Static</td><td>Static</td></tr>
+  <tr><td>Semicolons</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+  <tr><td>Curly braces { }</td><td>No (indentation)</td><td>Yes</td><td>Yes</td></tr>
+  <tr><td>Main entry point</td><td>top of file</td><td>main()</td><td>MonoBehaviour lifecycle</td></tr>
+  <tr><td>Runs in</td><td>interpreter</td><td>JVM</td><td>Unity engine / .NET</td></tr>
+</table>
+
+<h3>The Script File Structure</h3>
+<p>Every Unity script looks like this at minimum:</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C# — Unity Script</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="kw">using</span> <span class="cls">UnityEngine</span>;  <span class="cmt">// like "import" in Python</span>
+
+<span class="kw">public class</span> <span class="cls">MyScript</span> : <span class="cls">MonoBehaviour</span>
+{
+    <span class="cmt">// Variables go here (fields)</span>
+
+    <span class="kw">void</span> <span class="fn">Start</span>()
+    {
+        <span class="cmt">// Runs ONCE when the game object activates</span>
+    }
+
+    <span class="kw">void</span> <span class="fn">Update</span>()
+    {
+        <span class="cmt">// Runs EVERY frame (≈60 times per second)</span>
+    }
+}</pre>
+</div>
+
+<div class="callout tip"><span class="callout-icon">✅</span><p><strong>Key rule:</strong> The class name must exactly match the filename. If the file is <code>PlayerMove.cs</code>, the class must be <code>class PlayerMove</code>.</p></div>
+
+<h3>How Scripts Attach to Objects</h3>
+<p>In Unity, everything in a scene is a <strong>GameObject</strong> (a player, a bullet, a wall). You attach scripts to GameObjects as <strong>Components</strong>. The engine automatically calls <code>Start()</code> and <code>Update()</code> — you never call them manually.</p>
+
+<div class="quiz-box">
+  <h4>🧠 Quick Check</h4>
+  <p>Which method runs every single frame in a Unity script?</p>
+  <div class="quiz-options">
+    <button class="quiz-opt" onclick="quiz(this, false)">Start()</button>
+    <button class="quiz-opt" onclick="quiz(this, true)">Update()</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">main()</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">Run()</button>
+  </div>
+  <div class="quiz-feedback" id="qf">></div>
+</div>
+  `
+},
+
+// ── 1 ─────────────────────────────────────────────────────────────────────
+{
+  tag: "Unit 1 · Lesson 2",
+  title: "Variables & Types",
+  desc: "C# is statically typed — every variable must declare its type. Let's learn the main types and how they compare to Python.",
+  body: `
+<h3>Declaring Variables</h3>
+<p>In Python you write <code>x = 5</code>. In C# you must include the type:</p>
+
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="cmt">// type  name  =  value;</span>
+<span class="type">int</span>    score   = <span class="num">0</span>;
+<span class="type">float</span>  speed   = <span class="num">5.5f</span>;     <span class="cmt">// the 'f' means float, not double</span>
+<span class="type">bool</span>   isAlive = <span class="kw">true</span>;
+<span class="type">string</span> name    = <span class="str">"Hero"</span>;
+<span class="type">char</span>   grade   = <span class="str">'A'</span>;</pre>
+</div>
+
+<h3>The Common Types</h3>
+<table class="cmp-table">
+  <tr><th>Type</th><th>What it stores</th><th>Example</th></tr>
+  <tr><td>int</td><td>Whole numbers</td><td>42, -7, 0</td></tr>
+  <tr><td>float</td><td>Decimal numbers (32-bit)</td><td>3.14f, -0.5f</td></tr>
+  <tr><td>double</td><td>Decimal (64-bit, more precise)</td><td>3.14159265</td></tr>
+  <tr><td>bool</td><td>true / false</td><td>true, false</td></tr>
+  <tr><td>string</td><td>Text</td><td>"Hello"</td></tr>
+  <tr><td>char</td><td>Single character</td><td>'A', '!'</td></tr>
+</table>
+
+<div class="callout warn"><span class="callout-icon">⚠️</span><p><strong>Float gotcha:</strong> Unity almost always uses <code>float</code> for positions, speeds, and forces. Always add <code>f</code> after the number: <code>2.5f</code> not <code>2.5</code> (that's a double and causes type errors).</p></div>
+
+<h3>Unity Special Types</h3>
+<p>Unity adds its own commonly-used types:</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="cls">Vector2</span> pos2D = <span class="kw">new</span> <span class="cls">Vector2</span>(<span class="num">3f</span>, <span class="num">4f</span>);   <span class="cmt">// x, y</span>
+<span class="cls">Vector3</span> pos3D = <span class="kw">new</span> <span class="cls">Vector3</span>(<span class="num">1f</span>, <span class="num">0f</span>, <span class="num">5f</span>); <span class="cmt">// x, y, z</span>
+<span class="cls">Color</span>   red   = <span class="cls">Color</span>.red;
+
+<span class="cmt">// Access components:</span>
+<span class="type">float</span> x = pos3D.x;
+<span class="type">float</span> y = pos3D.y;</pre>
+</div>
+
+<h3>Public vs Private — The Inspector</h3>
+<p>When you declare a variable <code>public</code>, it shows up in Unity's Inspector panel (the sidebar when you click an object). This lets you set values without changing code!</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="kw">public class</span> <span class="cls">Player</span> : <span class="cls">MonoBehaviour</span>
+{
+    <span class="kw">public</span> <span class="type">float</span> speed = <span class="num">5f</span>;   <span class="cmt">// ✅ visible in Inspector</span>
+    <span class="kw">private</span> <span class="type">int</span> health = <span class="num">100</span>;  <span class="cmt">// 🔒 hidden (internal only)</span>
+
+    <span class="cmt">// [SerializeField] is the best of both:</span>
+    <span class="cmt">// private but STILL shows in Inspector</span>
+    [<span class="cls">SerializeField</span>] <span class="kw">private</span> <span class="type">float</span> jumpForce = <span class="num">8f</span>;
+}</pre>
+</div>
+
+<div class="callout tip"><span class="callout-icon">✅</span><p><strong>Best practice:</strong> Use <code>[SerializeField] private</code> instead of <code>public</code> — it keeps your code safe while still letting you tweak values in the Inspector.</p></div>
+
+<div class="quiz-box">
+  <h4>🧠 Quick Check</h4>
+  <p>What should you write for a speed variable with decimal value 3.5 in C#?</p>
+  <div class="quiz-options">
+    <button class="quiz-opt" onclick="quiz(this, false)">float speed = 3.5;</button>
+    <button class="quiz-opt" onclick="quiz(this, true)">float speed = 3.5f;</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">speed = 3.5</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">double speed = 3.5;</button>
+  </div>
+  <div class="quiz-feedback" id="qf"></div>
+</div>
+  `
+},
+
+// ── 2 ─────────────────────────────────────────────────────────────────────
+{
+  tag: "Unit 1 · Lesson 3",
+  title: "Conditionals & Logic",
+  desc: "if/else, comparison operators, and logical operators — mostly the same as Java but with a few Unity-specific patterns.",
+  body: `
+<h3>if / else if / else</h3>
+<p>Syntax is almost identical to Java — curly braces, parentheses around condition, semicolons:</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="type">int</span> health = <span class="num">75</span>;
+
+<span class="kw">if</span> (health &gt; <span class="num">80</span>)
+{
+    <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="str">"Full health"</span>);
+}
+<span class="kw">else if</span> (health &gt; <span class="num">30</span>)
+{
+    <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="str">"Low health"</span>);
+}
+<span class="kw">else</span>
+{
+    <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="str">"Critical!"</span>);
+}</pre>
+</div>
+
+<div class="callout info"><span class="callout-icon">💡</span><p><code>Debug.Log()</code> is Unity's version of <code>print()</code> in Python or <code>System.out.println()</code> in Java. Output appears in Unity's Console window.</p></div>
+
+<h3>Comparison Operators</h3>
+<table class="cmp-table">
+  <tr><th>Symbol</th><th>Meaning</th><th>Example</th></tr>
+  <tr><td>==</td><td>Equal to</td><td>score == 100</td></tr>
+  <tr><td>!=</td><td>Not equal</td><td>hp != 0</td></tr>
+  <tr><td>&gt;</td><td>Greater than</td><td>speed &gt; 5f</td></tr>
+  <tr><td>&lt;</td><td>Less than</td><td>timer &lt; 0f</td></tr>
+  <tr><td>&gt;=</td><td>Greater or equal</td><td>level &gt;= 10</td></tr>
+  <tr><td>&lt;=</td><td>Less or equal</td><td>coins &lt;= max</td></tr>
+</table>
+
+<h3>Logical Operators</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="cmt">// && = AND (both must be true)</span>
+<span class="kw">if</span> (isAlive && hasKey)  { <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="str">"Open door"</span>); }
+
+<span class="cmt">// || = OR (at least one true)</span>
+<span class="kw">if</span> (hasCoins || hasCreditCard) { <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="str">"Can buy"</span>); }
+
+<span class="cmt">// ! = NOT (flip the bool)</span>
+<span class="kw">if</span> (!isGrounded) { <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="str">"In air"</span>); }</pre>
+</div>
+
+<h3>switch Statements</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="type">string</span> direction = <span class="str">"up"</span>;
+
+<span class="kw">switch</span> (direction)
+{
+    <span class="kw">case</span> <span class="str">"up"</span>:
+        <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="str">"Moving up"</span>);
+        <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="str">"down"</span>:
+        <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="str">"Moving down"</span>);
+        <span class="kw">break</span>;
+    <span class="kw">default</span>:
+        <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="str">"Unknown"</span>);
+        <span class="kw">break</span>;
+}</pre>
+</div>
+
+<div class="quiz-box">
+  <h4>🧠 Quick Check</h4>
+  <p>What does <code>!</code> do in a condition?</p>
+  <div class="quiz-options">
+    <button class="quiz-opt" onclick="quiz(this, false)">Makes it a string</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">Means "not equal"</button>
+    <button class="quiz-opt" onclick="quiz(this, true)">Flips a bool (NOT)</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">Throws an exception</button>
+  </div>
+  <div class="quiz-feedback" id="qf"></div>
+</div>
+  `
+},
+
+// ── 3 ─────────────────────────────────────────────────────────────────────
+{
+  tag: "Unit 1 · Lesson 4",
+  title: "Loops",
+  desc: "for, while, foreach — the same ones you know, plus how to use them safely in Unity's Update loop.",
+  body: `
+<h3>for Loop</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="cmt">// for (init; condition; step)</span>
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; <span class="num">5</span>; i++)
+{
+    <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="str">"Count: "</span> + i);
+}
+<span class="cmt">// prints 0, 1, 2, 3, 4</span></pre>
+</div>
+
+<h3>while Loop</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="type">int</span> count = <span class="num">0</span>;
+<span class="kw">while</span> (count &lt; <span class="num">3</span>)
+{
+    <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="str">"Tick: "</span> + count);
+    count++;   <span class="cmt">// count += 1</span>
+}</pre>
+</div>
+
+<h3>foreach — Great for Lists/Arrays</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="type">string</span>[] enemies = { <span class="str">"Goblin"</span>, <span class="str">"Orc"</span>, <span class="str">"Dragon"</span> };
+
+<span class="kw">foreach</span> (<span class="type">string</span> enemy <span class="kw">in</span> enemies)
+{
+    <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="str">"Enemy: "</span> + enemy);
+}</pre>
+</div>
+
+<h3>Arrays & Lists in C#</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="cmt">// Fixed-size array</span>
+<span class="type">int</span>[] scores = <span class="kw">new</span> <span class="type">int</span>[<span class="num">3</span>];
+scores[<span class="num">0</span>] = <span class="num">10</span>;
+
+<span class="cmt">// Dynamic list (like Python list)</span>
+<span class="kw">using</span> <span class="cls">System.Collections.Generic</span>;
+
+<span class="cls">List</span>&lt;<span class="type">string</span>&gt; items = <span class="kw">new</span> <span class="cls">List</span>&lt;<span class="type">string</span>&gt;();
+items.<span class="fn">Add</span>(<span class="str">"Sword"</span>);
+items.<span class="fn">Add</span>(<span class="str">"Shield"</span>);
+items.<span class="fn">Remove</span>(<span class="str">"Sword"</span>);
+<span class="cls">Debug</span>.<span class="fn">Log</span>(items.Count);  <span class="cmt">// like len() in Python</span></pre>
+</div>
+
+<div class="callout warn"><span class="callout-icon">⚠️</span><p><strong>Infinite loop danger:</strong> Never write an infinite <code>while(true)</code> loop inside <code>Update()</code> — it will freeze Unity. Loops in Update run once per frame by design. Use Coroutines (Lesson 12) for timed loops.</p></div>
+
+<div class="quiz-box">
+  <h4>🧠 Quick Check</h4>
+  <p>What's the C# equivalent of a Python <code>list</code> with dynamic size?</p>
+  <div class="quiz-options">
+    <button class="quiz-opt" onclick="quiz(this, false)">int[] myArray</button>
+    <button class="quiz-opt" onclick="quiz(this, true)">List&lt;T&gt;</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">ArrayList</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">dict&lt;T&gt;</button>
+  </div>
+  <div class="quiz-feedback" id="qf"></div>
+</div>
+  `
+},
+
+// ── 4 ─────────────────────────────────────────────────────────────────────
+{
+  tag: "Unit 1 · Lesson 5",
+  title: "Functions / Methods",
+  desc: "How to write and call your own methods — return types, parameters, void, and access modifiers.",
+  body: `
+<h3>Anatomy of a Method</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="cmt">// accessModifier  returnType  MethodName(parameters)</span>
+<span class="kw">private</span> <span class="type">int</span> <span class="fn">AddNumbers</span>(<span class="type">int</span> a, <span class="type">int</span> b)
+{
+    <span class="kw">return</span> a + b;
+}
+
+<span class="cmt">// void = returns nothing (like Python functions without return)</span>
+<span class="kw">private</span> <span class="kw">void</span> <span class="fn">PrintScore</span>(<span class="type">int</span> score)
+{
+    <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="str">"Score: "</span> + score);
+}
+
+<span class="cmt">// Calling a method:</span>
+<span class="type">int</span> result = <span class="fn">AddNumbers</span>(<span class="num">3</span>, <span class="num">5</span>);  <span class="cmt">// result = 8</span>
+<span class="fn">PrintScore</span>(result);</pre>
+</div>
+
+<h3>Using Methods in Unity</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C# — Full Example</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="kw">public class</span> <span class="cls">Player</span> : <span class="cls">MonoBehaviour</span>
+{
+    <span class="kw">private</span> <span class="type">int</span> health = <span class="num">100</span>;
+
+    <span class="kw">void</span> <span class="fn">Start</span>()
+    {
+        <span class="fn">Heal</span>(<span class="num">20</span>);                  <span class="cmt">// call our method</span>
+        <span class="cls">Debug</span>.<span class="fn">Log</span>(health);          <span class="cmt">// prints 100 (was 80+20)</span>
+    }
+
+    <span class="kw">private</span> <span class="kw">void</span> <span class="fn">TakeDamage</span>(<span class="type">int</span> amount)
+    {
+        health -= amount;
+        <span class="kw">if</span> (health &lt;= <span class="num">0</span>) <span class="fn">Die</span>();
+    }
+
+    <span class="kw">private</span> <span class="kw">void</span> <span class="fn">Heal</span>(<span class="type">int</span> amount)
+    {
+        health += amount;
+        health = <span class="cls">Mathf</span>.<span class="fn">Clamp</span>(health, <span class="num">0</span>, <span class="num">100</span>); <span class="cmt">// keep in range</span>
+    }
+
+    <span class="kw">private</span> <span class="kw">void</span> <span class="fn">Die</span>()
+    {
+        <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="str">"Player died!"</span>);
+        <span class="cls">gameObject</span>.<span class="fn">SetActive</span>(<span class="kw">false</span>); <span class="cmt">// hide object</span>
+    }
+}</pre>
+</div>
+
+<div class="callout tip"><span class="callout-icon">✅</span><p><code>Mathf.Clamp(value, min, max)</code> is a super useful Unity math utility. It ensures a value stays within a range — great for health bars, clamping positions, etc.</p></div>
+
+<h3>Default Parameter Values</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="kw">private</span> <span class="kw">void</span> <span class="fn">SpawnEnemy</span>(<span class="type">string</span> type = <span class="str">"Goblin"</span>, <span class="type">int</span> count = <span class="num">1</span>)
+{
+    <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="str">"Spawning "</span> + count + <span class="str">" "</span> + type);
+}
+
+<span class="fn">SpawnEnemy</span>();                  <span class="cmt">// "Spawning 1 Goblin"</span>
+<span class="fn">SpawnEnemy</span>(<span class="str">"Dragon"</span>, <span class="num">3</span>);       <span class="cmt">// "Spawning 3 Dragon"</span></pre>
+</div>
+
+<div class="quiz-box">
+  <h4>🧠 Quick Check</h4>
+  <p>What return type should a method have if it does something but doesn't return a value?</p>
+  <div class="quiz-options">
+    <button class="quiz-opt" onclick="quiz(this, false)">null</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">int</button>
+    <button class="quiz-opt" onclick="quiz(this, true)">void</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">bool</button>
+  </div>
+  <div class="quiz-feedback" id="qf"></div>
+</div>
+  `
+},
+
+// ── 5 ─────────────────────────────────────────────────────────────────────
+{
+  tag: "Unit 2 · Lesson 6",
+  title: "MonoBehaviour & Lifecycle",
+  desc: "Understanding the event functions Unity calls automatically — the heartbeat of every Unity script.",
+  body: `
+<h3>Unity's Event Loop</h3>
+<p>Unity manages a game loop for you. Your job is to fill in the right event methods. Here are the most important ones in the order Unity calls them:</p>
+
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C# — All Key Lifecycle Methods</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="kw">public class</span> <span class="cls">LifecycleDemo</span> : <span class="cls">MonoBehaviour</span>
+{
+    <span class="cmt">// 1. Called ONCE before Start — use for component references</span>
+    <span class="kw">void</span> <span class="fn">Awake</span>() { }
+
+    <span class="cmt">// 2. Called ONCE on first frame — use for game logic setup</span>
+    <span class="kw">void</span> <span class="fn">Start</span>() { }
+
+    <span class="cmt">// 3. Called EVERY frame (~60fps) — game logic, input</span>
+    <span class="kw">void</span> <span class="fn">Update</span>() { }
+
+    <span class="cmt">// 4. Called at FIXED intervals (0.02s) — physics!</span>
+    <span class="kw">void</span> <span class="fn">FixedUpdate</span>() { }
+
+    <span class="cmt">// 5. Called AFTER all Updates — camera follow logic</span>
+    <span class="kw">void</span> <span class="fn">LateUpdate</span>() { }
+
+    <span class="cmt">// 6. Called when object is DESTROYED / scene ends</span>
+    <span class="kw">void</span> <span class="fn">OnDestroy</span>() { }
+}</pre>
+</div>
+
+<h3>When to Use Each</h3>
+<table class="cmp-table">
+  <tr><th>Method</th><th>Use it for</th></tr>
+  <tr><td>Awake()</td><td>Getting references to components on this object</td></tr>
+  <tr><td>Start()</td><td>Setting up initial state, after all Awakes have run</td></tr>
+  <tr><td>Update()</td><td>Keyboard input, animation triggers, timers</td></tr>
+  <tr><td>FixedUpdate()</td><td>Physics forces (Rigidbody.AddForce, etc.)</td></tr>
+  <tr><td>LateUpdate()</td><td>Camera movement (always after player moves)</td></tr>
+  <tr><td>OnDestroy()</td><td>Cleanup, unsubscribing events</td></tr>
+</table>
+
+<div class="callout warn"><span class="callout-icon">⚠️</span><p><strong>Physics rule:</strong> NEVER move a Rigidbody in <code>Update()</code>. Always use <code>FixedUpdate()</code>. Physics runs on a fixed timestep and Update timing varies per frame.</p></div>
+
+<h3>Delta Time — Frame-Rate Independent Movement</h3>
+<p>If you move an object by 5 units every frame, it'll move faster on a 120fps screen than a 30fps screen. Fix this with <code>Time.deltaTime</code>:</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="kw">void</span> <span class="fn">Update</span>()
+{
+    <span class="cmt">// BAD: moves 5 units per frame (frame-rate dependent)</span>
+    transform.position += <span class="kw">new</span> <span class="cls">Vector3</span>(<span class="num">5f</span>, <span class="num">0f</span>, <span class="num">0f</span>);
+
+    <span class="cmt">// GOOD: moves 5 units per SECOND (always the same)</span>
+    transform.position += <span class="kw">new</span> <span class="cls">Vector3</span>(<span class="num">5f</span>, <span class="num">0f</span>, <span class="num">0f</span>) * <span class="cls">Time</span>.deltaTime;
+}</pre>
+</div>
+
+<div class="quiz-box">
+  <h4>🧠 Quick Check</h4>
+  <p>Where should you apply physics forces to a Rigidbody?</p>
+  <div class="quiz-options">
+    <button class="quiz-opt" onclick="quiz(this, false)">Update()</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">Start()</button>
+    <button class="quiz-opt" onclick="quiz(this, true)">FixedUpdate()</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">Awake()</button>
+  </div>
+  <div class="quiz-feedback" id="qf"></div>
+</div>
+  `
+},
+
+// ── 6 ─────────────────────────────────────────────────────────────────────
+{
+  tag: "Unit 2 · Lesson 7",
+  title: "GameObject & Transform",
+  desc: "Every object in Unity is a GameObject. Learn to move, rotate, find, and destroy them in code.",
+  body: `
+<h3>transform — The Most Used Component</h3>
+<p>Every GameObject automatically has a <code>Transform</code> component. It holds position, rotation, and scale. From a script on the same object you access it via <code>transform</code> (lowercase).</p>
+
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="cmt">// Position</span>
+transform.position = <span class="kw">new</span> <span class="cls">Vector3</span>(<span class="num">2f</span>, <span class="num">0f</span>, <span class="num">0f</span>);   <span class="cmt">// teleport</span>
+transform.position += <span class="kw">new</span> <span class="cls">Vector3</span>(<span class="num">1f</span>, <span class="num">0</span>, <span class="num">0</span>);     <span class="cmt">// move right</span>
+
+<span class="cmt">// Translate = move relative to current facing direction</span>
+transform.<span class="fn">Translate</span>(<span class="cls">Vector3</span>.forward * speed * <span class="cls">Time</span>.deltaTime);
+
+<span class="cmt">// Rotation</span>
+transform.eulerAngles = <span class="kw">new</span> <span class="cls">Vector3</span>(<span class="num">0</span>, <span class="num">90</span>, <span class="num">0</span>);   <span class="cmt">// face right</span>
+transform.<span class="fn">Rotate</span>(<span class="num">0</span>, <span class="num">45f</span> * <span class="cls">Time</span>.deltaTime, <span class="num">0</span>);   <span class="cmt">// spin</span>
+
+<span class="cmt">// Scale</span>
+transform.localScale = <span class="kw">new</span> <span class="cls">Vector3</span>(<span class="num">2f</span>, <span class="num">2f</span>, <span class="num">2f</span>); <span class="cmt">// double size</span></pre>
+</div>
+
+<h3>Common Vector3 Shortcuts</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="cls">Vector3</span>.zero    <span class="cmt">// (0, 0, 0)</span>
+<span class="cls">Vector3</span>.one     <span class="cmt">// (1, 1, 1)</span>
+<span class="cls">Vector3</span>.up      <span class="cmt">// (0, 1, 0)</span>
+<span class="cls">Vector3</span>.down    <span class="cmt">// (0,-1, 0)</span>
+<span class="cls">Vector3</span>.right   <span class="cmt">// (1, 0, 0)</span>
+<span class="cls">Vector3</span>.forward <span class="cmt">// (0, 0, 1)</span></pre>
+</div>
+
+<h3>Finding, Creating, and Destroying Objects</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="cmt">// Find any object in scene by name (slow — avoid in Update)</span>
+<span class="cls">GameObject</span> player = <span class="cls">GameObject</span>.<span class="fn">Find</span>(<span class="str">"Player"</span>);
+
+<span class="cmt">// Find by tag (faster)</span>
+<span class="cls">GameObject</span> enemy = <span class="cls">GameObject</span>.<span class="fn">FindWithTag</span>(<span class="str">"Enemy"</span>);
+
+<span class="cmt">// Instantiate = clone a prefab</span>
+<span class="kw">public</span> <span class="cls">GameObject</span> bulletPrefab;  <span class="cmt">// drag prefab in Inspector</span>
+<span class="cls">Instantiate</span>(bulletPrefab, transform.position, <span class="cls">Quaternion</span>.identity);
+
+<span class="cmt">// Destroy an object</span>
+<span class="cls">Destroy</span>(gameObject);          <span class="cmt">// destroys this object</span>
+<span class="cls">Destroy</span>(other.gameObject);    <span class="cmt">// destroys another</span>
+<span class="cls">Destroy</span>(gameObject, <span class="num">2f</span>);     <span class="cmt">// destroys after 2 seconds</span></pre>
+</div>
+
+<div class="callout tip"><span class="callout-icon">✅</span><p><strong>GetComponent:</strong> To access another component on the same object (like a Rigidbody), use <code>GetComponent&lt;Rigidbody&gt;()</code>. Always cache the result in Awake() so you don't call it every frame.</p></div>
+
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C# — Caching Components</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="kw">private</span> <span class="cls">Rigidbody</span> rb;
+
+<span class="kw">void</span> <span class="fn">Awake</span>()
+{
+    rb = <span class="fn">GetComponent</span>&lt;<span class="cls">Rigidbody</span>&gt;();  <span class="cmt">// cache once</span>
+}
+
+<span class="kw">void</span> <span class="fn">FixedUpdate</span>()
+{
+    rb.<span class="fn">AddForce</span>(<span class="cls">Vector3</span>.up * <span class="num">10f</span>);  <span class="cmt">// use cached ref</span>
+}</pre>
+</div>
+
+<div class="quiz-box">
+  <h4>🧠 Quick Check</h4>
+  <p>What does <code>Instantiate()</code> do?</p>
+  <div class="quiz-options">
+    <button class="quiz-opt" onclick="quiz(this, false)">Destroys a GameObject</button>
+    <button class="quiz-opt" onclick="quiz(this, true)">Creates a clone of a prefab in the scene</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">Finds a GameObject by name</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">Moves an object to a position</button>
+  </div>
+  <div class="quiz-feedback" id="qf"></div>
+</div>
+  `
+},
+
+// ── 7 ─────────────────────────────────────────────────────────────────────
+{
+  tag: "Unit 2 · Lesson 8",
+  title: "Input System",
+  desc: "Reading keyboard, mouse, and gamepad input — the old Input class and the new Input System.",
+  body: `
+<h3>The Classic Input Class</h3>
+<p>The simplest way to read input in Unity — works without any setup:</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="kw">void</span> <span class="fn">Update</span>()
+{
+    <span class="cmt">// Axis: returns -1 to 1 (A/D, Left/Right arrows)</span>
+    <span class="type">float</span> h = <span class="cls">Input</span>.<span class="fn">GetAxis</span>(<span class="str">"Horizontal"</span>);
+    <span class="type">float</span> v = <span class="cls">Input</span>.<span class="fn">GetAxis</span>(<span class="str">"Vertical"</span>);
+
+    transform.<span class="fn">Translate</span>(h * speed * <span class="cls">Time</span>.deltaTime, <span class="num">0</span>, v * speed * <span class="cls">Time</span>.deltaTime);
+
+    <span class="cmt">// GetKey = held down | GetKeyDown = first frame pressed</span>
+    <span class="kw">if</span> (<span class="cls">Input</span>.<span class="fn">GetKeyDown</span>(<span class="cls">KeyCode</span>.Space))
+    {
+        <span class="fn">Jump</span>();
+    }
+
+    <span class="kw">if</span> (<span class="cls">Input</span>.<span class="fn">GetKey</span>(<span class="cls">KeyCode</span>.LeftShift))
+    {
+        speed = <span class="num">10f</span>;  <span class="cmt">// sprint</span>
+    }
+
+    <span class="cmt">// Mouse buttons: 0=left, 1=right, 2=middle</span>
+    <span class="kw">if</span> (<span class="cls">Input</span>.<span class="fn">GetMouseButtonDown</span>(<span class="num">0</span>))
+    {
+        <span class="fn">Shoot</span>();
+    }
+}</pre>
+</div>
+
+<h3>Input Comparison Table</h3>
+<table class="cmp-table">
+  <tr><th>Method</th><th>When it's true</th></tr>
+  <tr><td>GetKey(key)</td><td>Every frame the key is held</td></tr>
+  <tr><td>GetKeyDown(key)</td><td>Only the FIRST frame key is pressed</td></tr>
+  <tr><td>GetKeyUp(key)</td><td>The one frame the key is released</td></tr>
+  <tr><td>GetAxis("Horizontal")</td><td>Float -1 to 1 with smoothing (WASD + arrows)</td></tr>
+  <tr><td>GetAxisRaw("Horizontal")</td><td>Exact -1, 0, or 1 (no smoothing)</td></tr>
+</table>
+
+<h3>A Complete 2D Movement Script</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C# — PlayerController2D.cs</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="kw">public class</span> <span class="cls">PlayerController2D</span> : <span class="cls">MonoBehaviour</span>
+{
+    [<span class="cls">SerializeField</span>] <span class="kw">private</span> <span class="type">float</span> speed = <span class="num">5f</span>;
+    [<span class="cls">SerializeField</span>] <span class="kw">private</span> <span class="type">float</span> jumpForce = <span class="num">7f</span>;
+    <span class="kw">private</span> <span class="cls">Rigidbody2D</span> rb;
+    <span class="kw">private</span> <span class="type">bool</span> isGrounded = <span class="kw">true</span>;
+
+    <span class="kw">void</span> <span class="fn">Awake</span>()  { rb = <span class="fn">GetComponent</span>&lt;<span class="cls">Rigidbody2D</span>&gt;(); }
+
+    <span class="kw">void</span> <span class="fn">Update</span>()
+    {
+        <span class="type">float</span> move = <span class="cls">Input</span>.<span class="fn">GetAxisRaw</span>(<span class="str">"Horizontal"</span>);
+        rb.velocity = <span class="kw">new</span> <span class="cls">Vector2</span>(move * speed, rb.velocity.y);
+
+        <span class="kw">if</span> (<span class="cls">Input</span>.<span class="fn">GetKeyDown</span>(<span class="cls">KeyCode</span>.Space) && isGrounded)
+        {
+            rb.velocity = <span class="kw">new</span> <span class="cls">Vector2</span>(rb.velocity.x, jumpForce);
+            isGrounded = <span class="kw">false</span>;
+        }
+    }
+}</pre>
+</div>
+
+<div class="quiz-box">
+  <h4>🧠 Quick Check</h4>
+  <p>Which Input method only returns true on the <em>first</em> frame a key is pressed?</p>
+  <div class="quiz-options">
+    <button class="quiz-opt" onclick="quiz(this, false)">Input.GetKey()</button>
+    <button class="quiz-opt" onclick="quiz(this, true)">Input.GetKeyDown()</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">Input.GetAxis()</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">Input.GetKeyUp()</button>
+  </div>
+  <div class="quiz-feedback" id="qf"></div>
+</div>
+  `
+},
+
+// ── 8 ─────────────────────────────────────────────────────────────────────
+{
+  tag: "Unit 2 · Lesson 9",
+  title: "Physics & Rigidbody",
+  desc: "Making objects obey gravity, forces, and velocity using Unity's physics engine.",
+  body: `
+<h3>What is a Rigidbody?</h3>
+<p>A <strong>Rigidbody</strong> (or <strong>Rigidbody2D</strong> for 2D) is a component you add to a GameObject that hands it over to Unity's physics engine. The engine handles gravity, collisions, and forces for you.</p>
+
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C# — 3D Physics</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="kw">private</span> <span class="cls">Rigidbody</span> rb;
+
+<span class="kw">void</span> <span class="fn">Awake</span>() { rb = <span class="fn">GetComponent</span>&lt;<span class="cls">Rigidbody</span>&gt;(); }
+
+<span class="kw">void</span> <span class="fn">FixedUpdate</span>()
+{
+    <span class="cmt">// Push the object in a direction</span>
+    rb.<span class="fn">AddForce</span>(<span class="cls">Vector3</span>.forward * <span class="num">10f</span>);
+
+    <span class="cmt">// Add force for one-time jumps:</span>
+    rb.<span class="fn">AddForce</span>(<span class="cls">Vector3</span>.up * jumpForce, <span class="cls">ForceMode</span>.Impulse);
+
+    <span class="cmt">// Directly set velocity (instant, no physics ramp-up)</span>
+    rb.velocity = <span class="kw">new</span> <span class="cls">Vector3</span>(<span class="num">5f</span>, rb.velocity.y, <span class="num">0</span>);
+}</pre>
+</div>
+
+<h3>ForceMode Options</h3>
+<table class="cmp-table">
+  <tr><th>ForceMode</th><th>Effect</th></tr>
+  <tr><td>Force (default)</td><td>Continuous force — accounts for mass</td></tr>
+  <tr><td>Impulse</td><td>Instant force — great for jumps/explosions</td></tr>
+  <tr><td>Acceleration</td><td>Force ignoring mass</td></tr>
+  <tr><td>VelocityChange</td><td>Instant velocity change ignoring mass</td></tr>
+</table>
+
+<h3>Useful Rigidbody Properties</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre">rb.velocity          <span class="cmt">// current speed as Vector3</span>
+rb.angularVelocity   <span class="cmt">// spinning speed</span>
+rb.mass              <span class="cmt">// read/write the mass</span>
+rb.drag              <span class="cmt">// air resistance</span>
+rb.isKinematic       <span class="cmt">// if true: physics engine ignores it (manual control)</span>
+rb.useGravity        <span class="cmt">// toggle gravity on/off</span>
+
+<span class="cmt">// Freeze rotation so character doesn't tip over</span>
+rb.constraints = <span class="cls">RigidbodyConstraints</span>.FreezeRotation;</pre>
+</div>
+
+<div class="callout tip"><span class="callout-icon">✅</span><p>For 2D games use <code>Rigidbody2D</code> and <code>Vector2</code>. The API is almost identical — just add "2D" to the type names.</p></div>
+
+<div class="quiz-box">
+  <h4>🧠 Quick Check</h4>
+  <p>Which ForceMode should you use for a one-time jump?</p>
+  <div class="quiz-options">
+    <button class="quiz-opt" onclick="quiz(this, false)">Force</button>
+    <button class="quiz-opt" onclick="quiz(this, true)">Impulse</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">Acceleration</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">VelocityChange</button>
+  </div>
+  <div class="quiz-feedback" id="qf"></div>
+</div>
+  `
+},
+
+// ── 9 ─────────────────────────────────────────────────────────────────────
+{
+  tag: "Unit 2 · Lesson 10",
+  title: "Collision & Triggers",
+  desc: "Detecting when objects touch — the difference between colliders, triggers, and the methods Unity calls.",
+  body: `
+<h3>Colliders vs Triggers</h3>
+<p>A <strong>Collider</strong> is a physical shape — objects bounce off it. A <strong>Trigger</strong> is a Collider with "Is Trigger" checked — objects pass through it but Unity still detects the overlap.</p>
+
+<table class="cmp-table">
+  <tr><th></th><th>Collider</th><th>Trigger</th></tr>
+  <tr><td>Objects pass through?</td><td>No</td><td>Yes</td></tr>
+  <tr><td>Event prefix</td><td>OnCollision</td><td>OnTrigger</td></tr>
+  <tr><td>Use case</td><td>Walls, floors, enemies</td><td>Pickup zones, doors, death zones</td></tr>
+</table>
+
+<h3>Collision Events (physical contact)</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C# — 3D Collisions</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre><span class="cmt">// OnCollisionEnter = first frame of contact</span>
+<span class="kw">void</span> <span class="fn">OnCollisionEnter</span>(<span class="cls">Collision</span> col)
+{
+    <span class="kw">if</span> (col.gameObject.<span class="fn">CompareTag</span>(<span class="str">"Enemy"</span>))
+    {
+        <span class="fn">TakeDamage</span>(<span class="num">10</span>);
+    }
+}
+
+<span class="cmt">// OnCollisionStay = every frame while touching</span>
+<span class="kw">void</span> <span class="fn">OnCollisionStay</span>(<span class="cls">Collision</span> col) { }
+
+<span class="cmt">// OnCollisionExit = first frame after separating</span>
+<span class="kw">void</span> <span class="fn">OnCollisionExit</span>(<span class="cls">Collision</span> col) { }</pre>
+</div>
+
+<h3>Trigger Events (pass-through zones)</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre"><span class="kw">void</span> <span class="fn">OnTriggerEnter</span>(<span class="cls">Collider</span> other)
+{
+    <span class="kw">if</span> (other.gameObject.<span class="fn">CompareTag</span>(<span class="str">"Coin"</span>))
+    {
+        score++;
+        <span class="cls">Destroy</span>(other.gameObject);
+    }
+}
+
+<span class="cmt">// 2D versions just add "2D" and use Collider2D</span>
+<span class="kw">void</span> <span class="fn">OnTriggerEnter2D</span>(<span class="cls">Collider2D</span> other) { }
+<span class="kw">void</span> <span class="fn">OnCollisionEnter2D</span>(<span class="cls">Collision2D</span> col) { }</pre>
+</div>
+
+<div class="callout tip"><span class="callout-icon">✅</span><p>Always use <code>CompareTag("TagName")</code> instead of <code>gameObject.tag == "TagName"</code> — it's faster and avoids typo bugs (tags are set in the Inspector).</p></div>
+
+<div class="callout info"><span class="callout-icon">💡</span><p><strong>Collision requirement:</strong> For OnCollisionEnter to fire, at least one of the two objects must have a Rigidbody. Both must have Colliders.</p></div>
+
+<div class="quiz-box">
+  <h4>🧠 Quick Check</h4>
+  <p>Which type lets objects pass through but still fires overlap events?</p>
+  <div class="quiz-options">
+    <button class="quiz-opt" onclick="quiz(this, false)">Collider</button>
+    <button class="quiz-opt" onclick="quiz(this, true)">Trigger</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">Rigidbody</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">MeshRenderer</button>
+  </div>
+  <div class="quiz-feedback" id="qf"></div>
+</div>
+  `
+},
+
+// ── 10 ────────────────────────────────────────────────────────────────────
+{
+  tag: "Unit 3 · Lesson 11",
+  title: "Classes & Components",
+  desc: "OOP in C# — classes, constructors, inheritance, and how Unity's component system embodies these ideas.",
+  body: `
+<h3>Classes in C#</h3>
+<p>You already use classes every time you write a script (your script IS a class). Let's look at them more explicitly:</p>
+
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C# — Custom Class</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre"><span class="kw">public class</span> <span class="cls">Enemy</span>
+{
+    <span class="cmt">// Fields (data)</span>
+    <span class="kw">public</span> <span class="type">string</span> name;
+    <span class="kw">public</span> <span class="type">int</span> health;
+    <span class="kw">public</span> <span class="type">float</span> speed;
+
+    <span class="cmt">// Constructor</span>
+    <span class="kw">public</span> <span class="fn">Enemy</span>(<span class="type">string</span> n, <span class="type">int</span> hp, <span class="type">float</span> sp)
+    {
+        name   = n;
+        health = hp;
+        speed  = sp;
+    }
+
+    <span class="cmt">// Method</span>
+    <span class="kw">public</span> <span class="kw">void</span> <span class="fn">TakeDamage</span>(<span class="type">int</span> dmg)
+    {
+        health -= dmg;
+        <span class="cls">Debug</span>.<span class="fn">Log</span>(name + <span class="str">" has "</span> + health + <span class="str">" HP"</span>);
+    }
+}
+
+<span class="cmt">// Using the class:</span>
+<span class="cls">Enemy</span> goblin = <span class="kw">new</span> <span class="cls">Enemy</span>(<span class="str">"Goblin"</span>, <span class="num">50</span>, <span class="num">3f</span>);
+goblin.<span class="fn">TakeDamage</span>(<span class="num">20</span>);</pre>
+</div>
+
+<h3>Inheritance</h3>
+<p>Just like Python classes can inherit, so can C# — you saw this already with <code>: MonoBehaviour</code>:</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre"><span class="kw">public class</span> <span class="cls">BossEnemy</span> : <span class="cls">Enemy</span>  <span class="cmt">// inherits Enemy</span>
+{
+    <span class="kw">public</span> <span class="type">int</span> phase = <span class="num">1</span>;
+
+    <span class="kw">public</span> <span class="fn">BossEnemy</span>(<span class="type">string</span> n) : <span class="kw">base</span>(n, <span class="num">500</span>, <span class="num">1f</span>) { }
+
+    <span class="kw">public</span> <span class="kw">void</span> <span class="fn">EnterPhase2</span>()
+    {
+        phase = <span class="num">2</span>;
+        speed *= <span class="num">2f</span>;
+    }
+}</pre>
+</div>
+
+<h3>Getting Other Components</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre"><span class="cmt">// On same object:</span>
+<span class="cls">Animator</span> anim = <span class="fn">GetComponent</span>&lt;<span class="cls">Animator</span>&gt;();
+
+<span class="cmt">// On a child object:</span>
+<span class="cls">Transform</span> gun = <span class="fn">GetComponentInChildren</span>&lt;<span class="cls">Transform</span>&gt;();
+
+<span class="cmt">// On parent object:</span>
+<span class="cls">PlayerController</span> pc = <span class="fn">GetComponentInParent</span>&lt;<span class="cls">PlayerController</span>&gt;();
+
+<span class="cmt">// From a reference to another object:</span>
+<span class="cls">EnemyAI</span> ai = other.gameObject.<span class="fn">GetComponent</span>&lt;<span class="cls">EnemyAI</span>&gt;();</pre>
+</div>
+
+<div class="quiz-box">
+  <h4>🧠 Quick Check</h4>
+  <p>What keyword is used to call a parent class's constructor in C#?</p>
+  <div class="quiz-options">
+    <button class="quiz-opt" onclick="quiz(this, false)">super()</button>
+    <button class="quiz-opt" onclick="quiz(this, true)">base()</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">parent()</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">this()</button>
+  </div>
+  <div class="quiz-feedback" id="qf"></div>
+</div>
+  `
+},
+
+// ── 11 ────────────────────────────────────────────────────────────────────
+{
+  tag: "Unit 3 · Lesson 12",
+  title: "Coroutines & Time",
+  desc: "Coroutines let you write timed sequences without blocking — think 'pause for X seconds' or 'do something 10 times with delays'.",
+  body: `
+<h3>What is a Coroutine?</h3>
+<p>A coroutine is a special method that can pause itself mid-execution and resume later. This is how you delay actions, create spawn waves, or run timed sequences without freezing the game.</p>
+
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C# — Basic Coroutine</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre"><span class="cmt">// Return type must be IEnumerator</span>
+<span class="kw">using</span> <span class="cls">System.Collections</span>;
+
+<span class="cls">IEnumerator</span> <span class="fn">WaitAndDo</span>()
+{
+    <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="str">"Before wait"</span>);
+    <span class="kw">yield return new</span> <span class="cls">WaitForSeconds</span>(<span class="num">2f</span>);  <span class="cmt">// pause 2 seconds</span>
+    <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="str">"After wait"</span>);
+}
+
+<span class="cmt">// Start it like this (NOT called directly like a method):</span>
+<span class="fn">StartCoroutine</span>(<span class="fn">WaitAndDo</span>());</pre>
+</div>
+
+<h3>Yield Options</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre"><span class="kw">yield return new</span> <span class="cls">WaitForSeconds</span>(<span class="num">1f</span>);     <span class="cmt">// wait 1 real second</span>
+<span class="kw">yield return new</span> <span class="cls">WaitForFixedUpdate</span>();    <span class="cmt">// wait for next physics step</span>
+<span class="kw">yield return null</span>;                        <span class="cmt">// wait ONE frame</span>
+<span class="kw">yield return new</span> <span class="cls">WaitUntil</span>(() => isReady); <span class="cmt">// wait until condition</span></pre>
+</div>
+
+<h3>Practical Example — Enemy Spawn Wave</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre"><span class="kw">void</span> <span class="fn">Start</span>() { <span class="fn">StartCoroutine</span>(<span class="fn">SpawnWave</span>()); }
+
+<span class="cls">IEnumerator</span> <span class="fn">SpawnWave</span>()
+{
+    <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; <span class="num">5</span>; i++)
+    {
+        <span class="fn">Instantiate</span>(enemyPrefab, spawnPoint.position, <span class="cls">Quaternion</span>.identity);
+        <span class="kw">yield return new</span> <span class="cls">WaitForSeconds</span>(<span class="num">0.5f</span>); <span class="cmt">// spawn one every 0.5s</span>
+    }
+    <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="str">"Wave complete!"</span>);
+}</pre>
+</div>
+
+<h3>Time Utilities</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre"><span class="cls">Time</span>.deltaTime        <span class="cmt">// seconds since last frame</span>
+<span class="cls">Time</span>.time             <span class="cmt">// total seconds since game started</span>
+<span class="cls">Time</span>.timeScale        <span class="cmt">// 1 = normal, 0 = paused, 0.5 = slow-mo</span>
+<span class="cls">Time</span>.fixedDeltaTime   <span class="cmt">// fixed physics timestep (default 0.02)</span>
+
+<span class="cmt">// Pause the game:</span>
+<span class="cls">Time</span>.timeScale = <span class="num">0f</span>;
+<span class="cmt">// Unpause:</span>
+<span class="cls">Time</span>.timeScale = <span class="num">1f</span>;</pre>
+</div>
+
+<div class="quiz-box">
+  <h4>🧠 Quick Check</h4>
+  <p>What return type must a coroutine method have?</p>
+  <div class="quiz-options">
+    <button class="quiz-opt" onclick="quiz(this, false)">void</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">async Task</button>
+    <button class="quiz-opt" onclick="quiz(this, true)">IEnumerator</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">bool</button>
+  </div>
+  <div class="quiz-feedback" id="qf"></div>
+</div>
+  `
+},
+
+// ── 12 ────────────────────────────────────────────────────────────────────
+{
+  tag: "Unit 3 · Lesson 13",
+  title: "UI — Canvas & Text",
+  desc: "Display score, health bars, and buttons using Unity's Canvas system.",
+  body: `
+<h3>Unity UI Basics</h3>
+<p>All Unity UI lives on a <strong>Canvas</strong> object. Add UI elements (Text, Image, Button, Slider) as children of the Canvas in the hierarchy. Then control them from code:</p>
+
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre"><span class="kw">using</span> <span class="cls">UnityEngine</span>;
+<span class="kw">using</span> <span class="cls">TMPro</span>;          <span class="cmt">// for TextMeshPro (recommended)</span>
+<span class="kw">using</span> <span class="cls">UnityEngine.UI</span>; <span class="cmt">// for Slider, Image, Button</span>
+
+<span class="kw">public class</span> <span class="cls">HUD</span> : <span class="cls">MonoBehaviour</span>
+{
+    [<span class="cls">SerializeField</span>] <span class="kw">private</span> <span class="cls">TextMeshProUGUI</span> scoreText;
+    [<span class="cls">SerializeField</span>] <span class="kw">private</span> <span class="cls">Slider</span> healthSlider;
+    [<span class="cls">SerializeField</span>] <span class="kw">private</span> <span class="cls">GameObject</span> gameOverPanel;
+
+    <span class="kw">void</span> <span class="fn">Start</span>()
+    {
+        gameOverPanel.<span class="fn">SetActive</span>(<span class="kw">false</span>);  <span class="cmt">// hide panel at start</span>
+    }
+
+    <span class="kw">public</span> <span class="kw">void</span> <span class="fn">UpdateScore</span>(<span class="type">int</span> score)
+    {
+        scoreText.text = <span class="str">"Score: "</span> + score;
+    }
+
+    <span class="kw">public</span> <span class="kw">void</span> <span class="fn">UpdateHealth</span>(<span class="type">float</span> current, <span class="type">float</span> max)
+    {
+        healthSlider.value = current / max;  <span class="cmt">// 0 to 1</span>
+    }
+
+    <span class="kw">public</span> <span class="kw">void</span> <span class="fn">ShowGameOver</span>()
+    {
+        gameOverPanel.<span class="fn">SetActive</span>(<span class="kw">true</span>);
+    }
+}</pre>
+</div>
+
+<h3>Connecting Buttons</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre"><span class="kw">using</span> <span class="cls">UnityEngine.UI</span>;
+
+<span class="kw">public class</span> <span class="cls">MenuManager</span> : <span class="cls">MonoBehaviour</span>
+{
+    [<span class="cls">SerializeField</span>] <span class="kw">private</span> <span class="cls">Button</span> startButton;
+
+    <span class="kw">void</span> <span class="fn">Start</span>()
+    {
+        <span class="cmt">// Subscribe to click event via code</span>
+        startButton.onClick.<span class="fn">AddListener</span>(<span class="fn">OnStartClicked</span>);
+    }
+
+    <span class="kw">private</span> <span class="kw">void</span> <span class="fn">OnStartClicked</span>()
+    {
+        <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="str">"Game starting!"</span>);
+        <span class="cmt">// Or drag the method directly in Inspector instead</span>
+    }
+}</pre>
+</div>
+
+<div class="callout tip"><span class="callout-icon">✅</span><p>You can also link button events in the Inspector (no code needed) — click the <strong>+</strong> under "On Click ()" on the Button component, drag your script, then pick the method.</p></div>
+
+<div class="quiz-box">
+  <h4>🧠 Quick Check</h4>
+  <p>What namespace do you need to import to use Slider and Button in code?</p>
+  <div class="quiz-options">
+    <button class="quiz-opt" onclick="quiz(this, false)">UnityEngine</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">System.UI</button>
+    <button class="quiz-opt" onclick="quiz(this, true)">UnityEngine.UI</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">TMPro</button>
+  </div>
+  <div class="quiz-feedback" id="qf"></div>
+</div>
+  `
+},
+
+// ── 13 ────────────────────────────────────────────────────────────────────
+{
+  tag: "Unit 3 · Lesson 14",
+  title: "Scene Management",
+  desc: "Load levels, restart the game, and persist data between scenes.",
+  body: `
+<h3>Loading Scenes</h3>
+<p>First, add your scenes to the Build Settings (File → Build Settings → drag scenes in). Then use <code>SceneManager</code>:</p>
+
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre"><span class="kw">using</span> <span class="cls">UnityEngine.SceneManagement</span>;
+
+<span class="cmt">// Load by name</span>
+<span class="cls">SceneManager</span>.<span class="fn">LoadScene</span>(<span class="str">"Level2"</span>);
+
+<span class="cmt">// Load by build index</span>
+<span class="cls">SceneManager</span>.<span class="fn">LoadScene</span>(<span class="num">1</span>);
+
+<span class="cmt">// Restart current scene</span>
+<span class="cls">SceneManager</span>.<span class="fn">LoadScene</span>(<span class="cls">SceneManager</span>.GetActiveScene().buildIndex);
+
+<span class="cmt">// Load additive (keep current scene + add new one)</span>
+<span class="cls">SceneManager</span>.<span class="fn">LoadScene</span>(<span class="str">"UI"</span>, <span class="cls">LoadSceneMode</span>.Additive);</pre>
+</div>
+
+<h3>Persisting Data Between Scenes</h3>
+<p>Objects get destroyed when a new scene loads. To keep an object (like a GameManager or music player):</p>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C# — Singleton Pattern</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre"><span class="kw">public class</span> <span class="cls">GameManager</span> : <span class="cls">MonoBehaviour</span>
+{
+    <span class="kw">public static</span> <span class="cls">GameManager</span> Instance;
+    <span class="kw">public</span> <span class="type">int</span> score = <span class="num">0</span>;
+
+    <span class="kw">void</span> <span class="fn">Awake</span>()
+    {
+        <span class="kw">if</span> (Instance == <span class="kw">null</span>)
+        {
+            Instance = <span class="kw">this</span>;
+            <span class="cls">DontDestroyOnLoad</span>(gameObject); <span class="cmt">// survive scene loads</span>
+        }
+        <span class="kw">else</span>
+        {
+            <span class="cls">Destroy</span>(gameObject);  <span class="cmt">// kill duplicates</span>
+        }
+    }
+}
+
+<span class="cmt">// Access from anywhere:</span>
+<span class="cls">GameManager</span>.Instance.score += <span class="num">10</span>;</pre>
+</div>
+
+<h3>PlayerPrefs — Saving Simple Data</h3>
+<div class="code-block">
+  <div class="code-header"><span class="code-lang">C#</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+  <pre"><span class="cmt">// Save (persists between game sessions!)</span>
+<span class="cls">PlayerPrefs</span>.<span class="fn">SetInt</span>(<span class="str">"HighScore"</span>, <span class="num">250</span>);
+<span class="cls">PlayerPrefs</span>.<span class="fn">SetFloat</span>(<span class="str">"Volume"</span>, <span class="num">0.8f</span>);
+<span class="cls">PlayerPrefs</span>.<span class="fn">SetString</span>(<span class="str">"PlayerName"</span>, <span class="str">"Hero"</span>);
+<span class="cls">PlayerPrefs</span>.<span class="fn">Save</span>();
+
+<span class="cmt">// Load</span>
+<span class="type">int</span> hi = <span class="cls">PlayerPrefs</span>.<span class="fn">GetInt</span>(<span class="str">"HighScore"</span>, <span class="num">0</span>); <span class="cmt">// 0 = default</span></pre>
+</div>
+
+<div class="callout info"><span class="callout-icon">🏆</span><p><strong>You've finished the full course!</strong> You now know everything you need to write C# scripts in Unity from scratch — variables, loops, methods, MonoBehaviour, input, physics, collisions, UI, and scene management. Time to build something!</p></div>
+
+<div class="quiz-box">
+  <h4>🧠 Final Check</h4>
+  <p>What method keeps a GameObject alive between scene loads?</p>
+  <div class="quiz-options">
+    <button class="quiz-opt" onclick="quiz(this, false)">Instantiate(gameObject)</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">SceneManager.Keep()</button>
+    <button class="quiz-opt" onclick="quiz(this, true)">DontDestroyOnLoad(gameObject)</button>
+    <button class="quiz-opt" onclick="quiz(this, false)">Preserve(gameObject)</button>
+  </div>
+  <div class="quiz-feedback" id="qf"></div>
+</div>
+  `
+}
+
+];
+
+let current = 0;
+let done = new Set();
+
+function renderLesson(idx) {
+  const l = lessons[idx];
+  const content = document.getElementById('lesson-content');
+  content.innerHTML = `
+    <div class="lesson-hero">
+      <div class="lesson-tag">${l.tag}</div>
+      <h2>${l.title}</h2>
+      <p class="desc">${l.desc}</p>
+    </div>
+    ${l.body}
+    <div class="complete-bar">
+      <div class="icon">🏅</div>
+      <div>
+        <h4>Mark Lesson Complete</h4>
+        <p>Finished reading and the quiz? Mark it done to track progress.</p>
+      </div>
+      <button class="mark-done-btn ${done.has(idx) ? 'done' : ''}" onclick="markDone(${idx})" id="done-btn-${idx}">
+        ${done.has(idx) ? '✓ Done' : 'Mark Done'}
+      </button>
+    </div>
+  `;
+
+  // Update topbar
+  document.getElementById('top-badge').textContent = `Lesson ${idx+1} of ${lessons.length}`;
+  document.getElementById('top-title').textContent = l.title;
+
+  // Update nav buttons
+  document.getElementById('prev-btn').disabled = idx === 0;
+  document.getElementById('next-btn').textContent = idx === lessons.length-1 ? 'Finish 🎉' : 'Next →';
+
+  // Update sidebar active
+  document.querySelectorAll('.nav-item').forEach((el, i) => {
+    el.classList.remove('active');
+    if (i === idx) el.classList.add('active');
+  });
+
+  content.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function goto(idx) {
+  current = idx;
+  renderLesson(idx);
+}
+
+function nextLesson() {
+  if (current < lessons.length-1) { current++; renderLesson(current); }
+}
+
+function prevLesson() {
+  if (current > 0) { current--; renderLesson(current); }
+}
+
+function markDone(idx) {
+  done.add(idx);
+  const btn = document.getElementById(`done-btn-${idx}`);
+  btn.textContent = '✓ Done';
+  btn.classList.add('done');
+
+  // Update sidebar item
+  document.querySelectorAll('.nav-item')[idx].classList.add('done');
+  document.querySelectorAll('.nav-item')[idx].querySelector('.dot').style.background = 'var(--green)';
+
+  // Update progress
+  const pct = Math.round((done.size / lessons.length) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${done.size} / ${lessons.length} lessons done`;
+}
+
+function quiz(btn, correct) {
+  const box = btn.closest('.quiz-box');
+  const btns = box.querySelectorAll('.quiz-opt');
+  btns.forEach(b => b.disabled = true);
+  const fb = box.querySelector('.quiz-feedback');
+  if (correct) {
+    btn.classList.add('correct');
+    fb.textContent = '> ✅ Correct! Great job.';
+    fb.className = 'quiz-feedback show ok';
+  } else {
+    btn.classList.add('wrong');
+    fb.textContent = '> ❌ Not quite — try reviewing the section above.';
+    fb.className = 'quiz-feedback show bad';
+  }
+}
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'copied!';
+    setTimeout(() => btn.textContent = 'copy', 1500);
+  });
+}
+
+// Init
+renderLesson(0);
+</script>
+</body>
+</html>
