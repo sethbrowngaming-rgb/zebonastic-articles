@@ -1,16 +1,38 @@
--- FadeIntroScript.lua (LocalScript inside StarterGui)
--- Fades out the intro screen, then calls MenuLocalScript when done
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
 
-local TweenService = game:GetService("TweenService")
+-- Stop movement
+humanoid.WalkSpeed = 0
+humanoid.JumpPower = 0
 
-local screenGui = script.Parent
-local fadeFrame = screenGui:WaitForChild("FadeFrame") -- black Frame covering the screen
+-- Lock camera in place
+local camera = workspace.CurrentCamera
+camera.CameraType = Enum.CameraType.Scriptable
 
--- Fade out (black to transparent)
-local tween = TweenService:Create(fadeFrame, TweenInfo.new(2), { BackgroundTransparency = 1 })
-tween:Play()
+-- Keep camera at its current position/rotation
+camera.CFrame = camera.CFrame
 
-tween.Completed:Connect(function()
-    fadeFrame.Visible = false
-    require(game.StarterGui.MenuLocalScript).open()
-end)
+local TextLable = script.Parent
+
+TextLable.BackgroundTransparency = 0
+TextLable.TextTransparency = 1
+
+-- Fade in slowly
+for i = 1, 0, -0.05 do
+	TextLable.TextTransparency = i
+	task.wait(0.05)
+end
+
+task.wait(5)
+
+for i = 0, 1, 0.05 do
+	TextLable.TextTransparency = i
+	task.wait(0.05)
+end
+
+TextLable.Visible = false
+
+-- Call the menu once the intro is done
+require(game.StarterGui.MenuLocalScript).open()
