@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Freeze Player Movement in Roblox Studio — A Teachnar</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f5f0e8;
+    --cream: #ede7d5;
+    --rust: #b84a2e;
+    --gold: #c8963e;
+    --slate: #4a4840;
+    --pale: #f9f6ef;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.8;
+    padding: 0;
+  }
+
+  /* ── MASTHEAD ── */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 80px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent, transparent 30px,
+      rgba(255,255,255,0.02) 30px, rgba(255,255,255,0.02) 31px
+    );
+    pointer-events: none;
+  }
+  .kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    opacity: 0.9;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    font-weight: 700;
+    line-height: 1.12;
+    max-width: 760px;
+    margin: 0 auto 24px;
+  }
+  header h1 em {
+    color: var(--gold);
+    font-style: italic;
+  }
+  .subhead {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: rgba(245,240,232,0.65);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .rule-gold {
+    width: 60px; height: 2px;
+    background: var(--gold);
+    margin: 32px auto 0;
+  }
+
+  /* ── LAYOUT ── */
+  .page {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 60px 32px 120px;
+  }
+
+  /* ── SECTION LABELS ── */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--rust);
+    display: block;
+    margin-bottom: 10px;
+    margin-top: 72px;
+  }
+
+  /* ── HEADINGS ── */
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 24px;
+    color: var(--ink);
+  }
+  h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--slate);
+    margin: 36px 0 12px;
+  }
+
+  /* ── BODY TEXT ── */
+  p { margin-bottom: 1.4em; }
+  p + p { text-indent: 1.5em; }
+
+  /* ── PULL QUOTES ── */
+  blockquote {
+    border-left: 3px solid var(--gold);
+    background: var(--cream);
+    padding: 20px 28px;
+    margin: 40px 0;
+    font-style: italic;
+    font-size: 1.08rem;
+    color: var(--slate);
+    position: relative;
+  }
+  blockquote::before {
+    content: '\201C';
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    color: var(--gold);
+    opacity: 0.25;
+    position: absolute;
+    top: -10px; left: 10px;
+    line-height: 1;
+  }
+
+  /* ── PROOF BLOCKS ── */
+  .proof {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 24px 28px;
+    margin: 36px 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    position: relative;
+  }
+  .proof .proof-label {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 10px;
+  }
+  .proof code { color: #a8d8a8; }
+  .proof em { color: var(--gold); font-style: normal; }
+
+  /* ── ASSUMPTION CALLOUT ── */
+  .assume {
+    border: 1.5px solid var(--rust);
+    padding: 16px 22px;
+    margin: 32px 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--rust);
+    line-height: 1.6;
+  }
+  .assume::before {
+    content: 'COMMON MISTAKE';
+    display: block;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
+
+  /* ── COMPARISON TABLE ── */
+  .compare {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 36px 0;
+    font-size: 0.88rem;
+    font-family: 'DM Mono', monospace;
+  }
+  .compare th {
+    background: var(--ink);
+    color: var(--gold);
+    text-align: left;
+    padding: 10px 14px;
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .compare td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--cream);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .compare tr:nth-child(even) td { background: var(--pale); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid #ccc7b8;
+    margin: 56px 0;
+  }
+
+  /* ── SYNTHESIS BOX ── */
+  .synthesis {
+    background: var(--cream);
+    border-top: 3px solid var(--ink);
+    padding: 32px 36px;
+    margin: 56px 0 0;
+  }
+  .synthesis h4 {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 16px;
+  }
+  .synthesis p { margin-bottom: 0.8em; }
+  .synthesis p:last-child { margin-bottom: 0; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: rgba(245,240,232,0.4);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-align: center;
+    padding: 36px;
+  }
+
+  /* ── ANIMATION ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .page > * {
+    animation: fadeUp 0.5s ease both;
+  }
+  .page > *:nth-child(1) { animation-delay: 0.05s; }
+  .page > *:nth-child(2) { animation-delay: 0.10s; }
+  .page > *:nth-child(3) { animation-delay: 0.15s; }
+  .page > *:nth-child(n+4) { animation-delay: 0.20s; }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="kicker">Teachnar · Roblox Studio · LocalScript</p>
+  <h1>How to <em>Freeze a Player</em> in Roblox Studio<br>— Movement, Camera, and Mouse</h1>
+  <p class="subhead">The simplest correct approach: what to change, why each line matters, and the traps beginners fall into.</p>
+  <div class="rule-gold"></div>
+</header>
+
+<div class="page">
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SECTION 1: THE CODE -->
+  <!-- ══════════════════════════════════════ -->
+  <span class="section-label">I. The Code</span>
+  <h2>Six lines. That's all it takes.</h2>
+
+  <p>Place a <strong>LocalScript</strong> inside <code>StarterPlayerScripts</code> (or <code>StarterCharacterScripts</code>) and paste the following:</p>
+
+  <div class="proof">
+    <span class="proof-label">LocalScript — Freeze Movement &amp; Camera, Free Mouse</span>
+    <code>local Players = game:GetService("Players")</code><br>
+    <code>local UserInputService = game:GetService("UserInputService")</code><br><br>
+    <code>local player = Players.LocalPlayer</code><br>
+    <code>local character = player.Character or player.CharacterAdded:Wait()</code><br>
+    <code>local humanoid = character:WaitForChild("Humanoid")</code><br>
+    <code>local camera = workspace.CurrentCamera</code><br><br>
+    <em>-- Freeze movement</em><br>
+    <code>humanoid.WalkSpeed = 0</code><br>
+    <code>humanoid.JumpPower = 0</code><br><br>
+    <em>-- Lock the camera in place</em><br>
+    <code>camera.CameraType = Enum.CameraType.Scriptable</code><br><br>
+    <em>-- Let the mouse move freely</em><br>
+    <code>UserInputService.MouseBehavior = Enum.MouseBehavior.Default</code>
+  </div>
+
+  <p>That's the complete solution. The rest of this article explains exactly why each piece is written the way it is — so you can modify it confidently rather than copy-pasting blindly.</p>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SECTION 2: WHY EACH LINE -->
+  <!-- ══════════════════════════════════════ -->
+  <span class="section-label">II. Line by Line</span>
+  <h2>Nothing is accidental — not even the <em>:Wait()</em>.</h2>
+
+  <h3>WalkSpeed = 0 and JumpPower = 0</h3>
+
+  <p>The <strong>Humanoid</strong> object is what processes movement input. Setting <code>WalkSpeed</code> to zero means the engine still receives the player's input — the W/A/S/D keys still fire — but the resulting velocity is multiplied by zero, so nothing moves. Setting <code>JumpPower</code> to zero prevents the character from leaving the ground via the spacebar.</p>
+
+  <p>This is the right approach because it works <em>with</em> the engine rather than blocking input at the source. The character stays animated (idle state), physics still simulates, and you can restore movement instantly by setting these values back.</p>
+
+  <div class="assume">
+    Deleting or disabling the Humanoid to freeze movement is a mistake. It breaks respawning, health, and animation state entirely — you'll get a corpse that can't be revived. Always set WalkSpeed and JumpPower to 0; never remove the Humanoid.
+  </div>
+
+  <h3>camera.CameraType = Enum.CameraType.Scriptable</h3>
+
+  <p>Roblox cameras have several modes. The default is <code>Custom</code>, which lets the player orbit the camera around their character with the right mouse button or by dragging. Setting the type to <code>Scriptable</code> tells the engine: <em>I will control this camera from code; don't respond to player input.</em></p>
+
+  <p>The camera stays exactly where it was when you made the change. It doesn't snap to a new position. If you want to also set its position, assign <code>camera.CFrame</code> after changing the type.</p>
+
+  <h3>UserInputService.MouseBehavior = Enum.MouseBehavior.Default</h3>
+
+  <p>By default in Roblox, the mouse cursor is hidden and locked to the center of the screen — this is what allows camera rotation to work. After locking the camera, you typically want the cursor visible and freely movable. <code>MouseBehavior.Default</code> unlocks it. The cursor appears and the player can move it anywhere on screen without affecting the camera.</p>
+
+  <blockquote>
+    Three separate systems, three separate fixes. Movement lives on the Humanoid. Camera lives on workspace.CurrentCamera. Mouse cursor lives on UserInputService. Change all three, or you'll freeze two and leave one still responding.
+  </blockquote>
+
+  <h3>player.Character or player.CharacterAdded:Wait()</h3>
+
+  <p>This line handles a timing issue. If the LocalScript runs before the character has loaded into the world, <code>player.Character</code> is nil — and the next line will error. The <code>or player.CharacterAdded:Wait()</code> part pauses the script until the character exists before continuing. It's a small thing, but it's the difference between code that works reliably and code that breaks on fast machines or after respawns.</p>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SECTION 3: WHERE TO PUT THE SCRIPT -->
+  <!-- ══════════════════════════════════════ -->
+  <span class="section-label">III. Placement</span>
+  <h2>Where you put the script changes <em>when</em> it runs.</h2>
+
+  <table class="compare">
+    <thead>
+      <tr><th>Location</th><th>Runs When</th><th>Use This If</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>StarterPlayerScripts</td>
+        <td>Once per session, when the player joins</td>
+        <td>You want to freeze the player immediately on join and keep it frozen across respawns</td>
+      </tr>
+      <tr>
+        <td>StarterCharacterScripts</td>
+        <td>Every time the character spawns or respawns</td>
+        <td>You want the freeze to re-apply after each death automatically</td>
+      </tr>
+      <tr>
+        <td>A Script in ServerScriptService</td>
+        <td>On the server, for all players</td>
+        <td>You want to freeze all players at once from the server side (requires a RemoteEvent to trigger the LocalScript)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>For most use cases — a cutscene, a menu, a loading screen — <code>StarterCharacterScripts</code> is the right choice. It guarantees the Humanoid exists when the script runs, so the <code>:Wait()</code> call above is technically redundant there, but it doesn't hurt to keep it.</p>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SECTION 4: UNFREEZING -->
+  <!-- ══════════════════════════════════════ -->
+  <span class="section-label">IV. Reversing It</span>
+  <h2>Unfreezing is the exact same code, run backwards.</h2>
+
+  <div class="proof">
+    <span class="proof-label">Unfreeze — Restore All Three Systems</span>
+    <em>-- Restore movement</em><br>
+    <code>humanoid.WalkSpeed = 16</code><span style="color:#666">  -- Roblox default</span><br>
+    <code>humanoid.JumpPower = 50</code><span style="color:#666">  -- Roblox default</span><br><br>
+    <em>-- Restore camera control to the player</em><br>
+    <code>camera.CameraType = Enum.CameraType.Custom</code><br><br>
+    <em>-- Lock the mouse back to center (for camera orbiting)</em><br>
+    <code>UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter</code>
+  </div>
+
+  <p>The default <code>WalkSpeed</code> in Roblox is 16 and the default <code>JumpPower</code> is 50. If your game uses different values, store them in a variable before freezing so you can restore the correct numbers rather than guessing.</p>
+
+  <div class="assume">
+    Setting camera.CameraType back to Custom without also restoring MouseBehavior to LockCenter will leave the player with a free cursor while the camera tries to orbit — the camera will feel broken. Always restore all three systems together.
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SECTION 5: SYNTHESIS -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="synthesis">
+    <h4>Synthesis — What You Now Know</h4>
+
+    <p><strong>The three systems are independent.</strong> Movement (Humanoid), camera (workspace.CurrentCamera), and mouse cursor (UserInputService) don't share state. Changing one doesn't affect the others. This is why the fix requires exactly three changes, not one.</p>
+
+    <p><strong>WalkSpeed = 0 is not the same as blocking input.</strong> Input still fires; the result is just zero velocity. This keeps the character in a valid state and makes it trivial to unfreeze.</p>
+
+    <p><strong>Scriptable camera type is a full handoff.</strong> Once set, the engine won't touch the camera's position or rotation at all. You own it. If you don't set a CFrame, it stays exactly where it was — which is usually what you want for a freeze.</p>
+  </div>
+
+</div>
+
+<footer>
+  Teachnar · Roblox Studio · Freeze Player Movement · zebonastic.substack.com
+</footer>
+
+</body>
+</html>
