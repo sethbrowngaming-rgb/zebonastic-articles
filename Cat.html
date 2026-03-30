@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catopia 🐱 The Ultimate Cat Paradise</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Comic+Neue:wght@700&display=swap');
+        
+        :root {
+            --pink: #ff69b4;
+            --purple: #9b59b6;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ffeef8, #f0e6ff);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(90deg, var(--pink), var(--purple));
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-family: 'Comic Neue', cursive;
+            font-size: 3.5rem;
+            margin: 0;
+            text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+        }
+        
+        .tagline {
+            font-size: 1.4rem;
+            margin: 0.5rem 0 0;
+            opacity: 0.95;
+        }
+        
+        nav {
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav a {
+            margin: 0 1rem;
+            text-decoration: none;
+            color: var(--purple);
+            font-weight: 600;
+        }
+        
+        nav a:hover {
+            color: var(--pink);
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 4rem 1rem;
+            background: url('https://picsum.photos/id/1015/2000/800') center/cover no-repeat;
+            color: white;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
+        }
+        
+        .section {
+            padding: 4rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h2 {
+            font-size: 2.8rem;
+            text-align: center;
+            color: var(--purple);
+            margin-bottom: 2rem;
+        }
+        
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .cat-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .cat-card:hover {
+            transform: translateY(-15px) scale(1.03);
+        }
+        
+        .cat-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        .facts {
+            background: #fff;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .fact {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .fact:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .paw {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+        
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+        
+        .meow-btn {
+            background: var(--pink);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 2rem auto;
+            display: block;
+            box-shadow: 0 8px 20px rgba(255,105,180,0.4);
+        }
+        
+        .meow-btn:hover {
+            background: #ff1493;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🐱 Catopia</h1>
+        <p class="tagline">Where every day is a purr-fect day</p>
+    </header>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#breeds">Breeds</a>
+        <a href="#facts">Fun Facts</a>
+        <a href="#gallery">Gallery</a>
+    </nav>
+
+    <section id="home" class="hero">
+        <h1 style="font-size: 4rem;">Meow there, human! 👋</h1>
+        <p style="font-size: 1.6rem; max-width: 700px; margin: 1.5rem auto;">
+            Welcome to the internet's coziest corner dedicated to our favorite floofy overlords.
+        </p>
+        <button onclick="meow()" class="meow-btn">Click for a Surprise Meow 🎵</button>
+    </section>
+
+    <section id="breeds" class="section">
+        <h2>Popular Cat Breeds</h2>
+        <div class="cat-grid">
+            <div class="cat-card">
+                <img src="https://picsum.photos/id/1015/600/400" alt="Maine Coon">
+                <div class="card-content">
+                    <h3>Maine Coon</h3>
+                    <p>The gentle giant. Huge, fluffy, and incredibly friendly. Often called "the dog of the cat world."</p>
+                </div>
+            </div>
+            
+            <div class="cat-card">
+                <img src="https://picsum.photos/id/237/600/400" alt="Siamese">
+                <div class="card-content">
+                    <h3>Siamese</h3>
+                    <p>Chatty, intelligent, and elegant. They love talking to their humans and have striking blue eyes.</p>
+                </div>
+            </div>
+            
+            <div class="cat-card">
+                <img src="https://picsum.photos/id/201/600/400" alt="Ragdoll">
+                <div class="card-content">
+                    <h3>Ragdoll</h3>
+                    <p>Super relaxed and affectionate. They go limp like a ragdoll when picked up — hence the name!</p>
+                </div>
+            </div>
+            
+            <div class="cat-card">
+                <img src="https://picsum.photos/id/669/600/400" alt="Persian">
+                <div class="card-content">
+                    <h3>Persian</h3>
+                    <p>The fluffy royalty. Known for their sweet faces, luxurious coats, and calm personalities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="facts" class="section" style="background: #f9e8ff;">
+        <h2>Amazing Cat Facts 🐾</h2>
+        <div class="facts">
+            <div class="fact">
+                <span class="paw">🐾</span>
+                <div>
+                    <strong>Cats walk like camels and giraffes</strong> — they move both right feet first, then both left feet. No other animal walks this way!
+                </div>
+            </div>
+            <div class="fact">
+                <span class="paw">🐾</span>
+                <div>
+                    <strong>House cats share 95.6% of their DNA with tigers</strong>. They're basically tiny tigers living in your house.
+                </div>
+            </div>
+            <div class="fact">
+                <span class="paw">🐾</span>
+                <div>
+                    <strong>Cats can't taste sweetness</strong>, but they have an extra organ that lets them "taste" smells.
+                </div>
+            </div>
+            <div class="fact">
+                <span class="paw">🐾</span>
+                <div>
+                    <strong>A group of cats is called a "clowder"</strong>. A group of kittens is a "kindle".
+                </div>
+            </div>
+            <div class="fact">
+                <span class="paw">🐾</span>
+                <div>
+                    <strong>Cats can jump up to 6 times their body length</strong> and run up to 30 mph in short bursts.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="section">
+        <h2>Cute Cat Gallery</h2>
+        <div class="cat-grid">
+            <div class="cat-card">
+                <img src="https://picsum.photos/id/1015/600/400" alt="Sleeping kitten">
+                <div class="card-content"><p>Sleepy floof</p></div>
+            </div>
+            <div class="cat-card">
+                <img src="https://picsum.photos/id/201/600/400" alt="Playful cat">
+                <div class="card-content"><p>Box inspector at work</p></div>
+            </div>
+            <div class="cat-card">
+                <img src="https://picsum.photos/id/669/600/400" alt="Cute cat">
+                <div class="card-content"><p>Professional model</p></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Made with ❤️ and endless cat hair for all cat lovers everywhere.</p>
+        <p>🐱 Meow responsibly • 2026</p>
+    </footer>
+
+    <script>
+        function meow() {
+            const meows = ["MEOW!", "Purrrrrr...", "Mrow?", "NYAN NYAN!", "Hissss... just kidding 😺"];
+            const randomMeow = meows[Math.floor(Math.random() * meows.length)];
+            alert(randomMeow);
+            
+            // Confetti meow effect
+            const colors = ['#ff69b4', '#9b59b6', '#ffd700'];
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.textContent = '🐾';
+                    confetti.style.position = 'fixed';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.top = '-50px';
+                    confetti.style.fontSize = '2rem';
+                    confetti.style.zIndex = '9999';
+                    confetti.style.transition = 'all 3s';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.style.top = '110vh';
+                        confetti.style.transform = `rotate(${Math.random() * 720}deg)`;
+                    }, 50);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 40);
+            }
+        }
+        
+        // Keyboard shortcut: press 'c' for cat fact
+        document.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() === 'c') {
+                alert("🐱 Fun fact: Cats spend 70% of their lives sleeping!");
+            }
+        });
+    </script>
+</body>
+</html>
