@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy – COLD</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #07111C;
+      --surface:   #0D1E2E;
+      --border:    #1A3A52;
+      --accent:    #5BC8E8;
+      --accent-dim:#1E4A66;
+      --text:      #C8DCE8;
+      --muted:     #6B8FA8;
+      --white:     #EDF4F8;
+      --mono:      'Share Tech Mono', monospace;
+      --sans:      'Inter', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.75;
+      min-height: 100vh;
+    }
+
+    /* ── snowfall canvas ── */
+    #snow {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.35;
+    }
+
+    /* ── layout ── */
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+    }
+
+    /* ── header ── */
+    header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .game-title {
+      font-family: var(--mono);
+      font-size: clamp(52px, 10vw, 88px);
+      letter-spacing: 0.28em;
+      color: var(--white);
+      text-shadow:
+        0 0 30px rgba(91,200,232,0.55),
+        0 0 80px rgba(91,200,232,0.2);
+      line-height: 1;
+    }
+
+    .doc-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-top: 10px;
+    }
+
+    .effective {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+      font-family: var(--mono);
+    }
+
+    /* ── divider ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+      margin: 40px 0;
+    }
+
+    /* ── intro block ── */
+    .intro {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 4px;
+      padding: 20px 24px;
+      margin-bottom: 48px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    /* ── sections ── */
+    section {
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    h2::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    p {
+      color: var(--text);
+      margin-bottom: 12px;
+      font-weight: 300;
+    }
+
+    ul {
+      list-style: none;
+      margin: 10px 0 14px 0;
+    }
+
+    ul li {
+      padding: 5px 0 5px 20px;
+      position: relative;
+      font-weight: 300;
+      color: var(--text);
+    }
+
+    ul li::before {
+      content: '›';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-family: var(--mono);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid var(--accent-dim);
+      transition: border-color 0.2s;
+    }
+
+    a:hover { border-color: var(--accent); }
+
+    /* ── contact card ── */
+    .contact-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 20px 24px;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 2;
+      color: var(--text);
+    }
+
+    .contact-card span {
+      color: var(--muted);
+      margin-right: 8px;
+    }
+
+    /* ── footer ── */
+    footer {
+      text-align: center;
+      margin-top: 64px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+    }
+
+    @media (max-width: 480px) {
+      .wrapper { padding: 40px 16px 60px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #snow { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="snow"></canvas>
+
+<div class="wrapper">
+  <header>
+    <div class="game-title">COLD</div>
+    <div class="doc-label">Privacy Policy</div>
+    <div class="effective">Effective Date: June 10, 2026</div>
+  </header>
+
+  <div class="intro">
+    Thank you for playing COLD. This Privacy Policy explains how O2cool168 ("we," "us," or "our") collects, uses, and shares information when you use the COLD mobile game ("the Game"). By playing COLD, you agree to the practices described in this policy.
+  </div>
+
+  <section>
+    <h2>1 · Information We Collect</h2>
+    <p>We do not directly collect personal information such as your name, email address, or contact details. However, the Game uses third-party advertising services that may collect certain data automatically, including:</p>
+    <ul>
+      <li>Device identifiers (e.g., Advertising ID, Android ID)</li>
+      <li>IP address and approximate location (country/region level)</li>
+      <li>Device type, operating system, and version</li>
+      <li>App usage data and interactions</li>
+      <li>Ad impressions, clicks, and engagement data</li>
+    </ul>
+  </section>
+
+  <div class="divider"></div>
+
+  <section>
+    <h2>2 · Advertising</h2>
+    <p>COLD contains advertisements served by Google AdMob. AdMob and its partners may use the information listed above to serve you personalized or contextual ads. Google's use of advertising identifiers allows them to show ads based on your interests.</p>
+    <p>You can opt out of personalized advertising at any time by:</p>
+    <ul>
+      <li>Going to Settings &rsaquo; Google &rsaquo; Ads &rsaquo; Opt out of Ads Personalization (Android)</li>
+      <li>Visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">google.com/settings/ads</a></li>
+    </ul>
+    <p>For more information on how Google collects and uses data, review Google's Privacy Policy at <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.</p>
+  </section>
+
+  <div class="divider"></div>
+
+  <section>
+    <h2>3 · Children's Privacy</h2>
+    <p>COLD is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If you are a parent or guardian and believe your child has provided personal information, please contact us and we will take steps to delete it.</p>
+    <p>AdMob is configured to serve ads appropriate for general audiences. We do not enable interest-based advertising for users we know to be under 13.</p>
+  </section>
+
+  <div class="divider"></div>
+
+  <section>
+    <h2>4 · How We Use Information</h2>
+    <p>Data collected through AdMob and related services is used to:</p>
+    <ul>
+      <li>Display advertisements within the Game</li>
+      <li>Measure and analyze ad performance</li>
+      <li>Improve user experience</li>
+      <li>Comply with legal obligations</li>
+    </ul>
+  </section>
+
+  <div class="divider"></div>
+
+  <section>
+    <h2>5 · Data Sharing</h2>
+    <p>We do not sell your personal data. Data collected by third-party advertising SDKs (such as AdMob) is governed by their own privacy policies. We may share anonymized, aggregated data that cannot reasonably identify you.</p>
+  </section>
+
+  <div class="divider"></div>
+
+  <section>
+    <h2>6 · Data Retention</h2>
+    <p>We do not store personal data on our own servers. Any data collected by AdMob or other third-party services is retained per their own data retention policies.</p>
+  </section>
+
+  <div class="divider"></div>
+
+  <section>
+    <h2>7 · Your Rights</h2>
+    <p>Depending on where you live, you may have rights regarding your data — including the right to access, correct, or delete it. To exercise these rights, contact us at the address below or review the relevant third-party privacy policies directly.</p>
+  </section>
+
+  <div class="divider"></div>
+
+  <section>
+    <h2>8 · Security</h2>
+    <p>We take reasonable measures to protect the Game and its users. However, no method of transmission over the internet is 100% secure. We cannot guarantee absolute security of data handled by third-party services.</p>
+  </section>
+
+  <div class="divider"></div>
+
+  <section>
+    <h2>9 · Changes to This Policy</h2>
+    <p>We may update this Privacy Policy from time to time. When we do, we will update the effective date at the top of this page. Continued use of the Game after changes constitutes your acceptance of the updated policy.</p>
+  </section>
+
+  <div class="divider"></div>
+
+  <section>
+    <h2>10 · Contact</h2>
+    <div class="contact-card">
+      <div><span>Developer</span>O2cool168</div>
+      <div><span>Email&nbsp;&nbsp;&nbsp;</span>[your contact email]</div>
+      <div><span>Website&nbsp;</span>[your GitHub Pages URL]</div>
+    </div>
+  </section>
+
+  <footer>
+    &mdash;&nbsp; End of Privacy Policy &nbsp;&mdash;
+  </footer>
+</div>
+
+<script>
+  const canvas = document.getElementById('snow');
+  const ctx = canvas.getContext('2d');
+  let flakes = [];
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  for (let i = 0; i < 90; i++) {
+    flakes.push({
+      x:    Math.random() * canvas.width,
+      y:    Math.random() * canvas.height,
+      r:    Math.random() * 1.6 + 0.4,
+      sp:   Math.random() * 0.6 + 0.2,
+      drift: (Math.random() - 0.5) * 0.3
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#AADDF0';
+    flakes.forEach(f => {
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+      ctx.fill();
+      f.y += f.sp;
+      f.x += f.drift;
+      if (f.y > canvas.height) { f.y = -4; f.x = Math.random() * canvas.width; }
+      if (f.x > canvas.width)  f.x = 0;
+      if (f.x < 0)             f.x = canvas.width;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+</script>
+
+</body>
+</html>
