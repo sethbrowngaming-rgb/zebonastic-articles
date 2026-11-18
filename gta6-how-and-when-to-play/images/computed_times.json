@@ -1,0 +1,55 @@
+{
+ "New Zealand (Auckland)": {
+  "utc": "2026-11-18T11:00:00+00:00",
+  "lead_vs_et_h": 18.0
+ },
+ "Australia (Sydney)": {
+  "utc": "2026-11-18T13:00:00+00:00",
+  "lead_vs_et_h": 16.0
+ },
+ "Japan / South Korea": {
+  "utc": "2026-11-18T15:00:00+00:00",
+  "lead_vs_et_h": 14.0
+ },
+ "Singapore": {
+  "utc": "2026-11-18T16:00:00+00:00",
+  "lead_vs_et_h": 13.0
+ },
+ "India": {
+  "utc": "2026-11-18T18:30:00+00:00",
+  "lead_vs_et_h": 10.5
+ },
+ "UAE (Dubai)": {
+  "utc": "2026-11-18T20:00:00+00:00",
+  "lead_vs_et_h": 9.0
+ },
+ "Central Europe (DE, FR)": {
+  "utc": "2026-11-18T23:00:00+00:00",
+  "lead_vs_et_h": 6.0
+ },
+ "United Kingdom": {
+  "utc": "2026-11-19T00:00:00+00:00",
+  "lead_vs_et_h": 5.0
+ },
+ "Brazil (Sao Paulo)": {
+  "utc": "2026-11-19T03:00:00+00:00",
+  "lead_vs_et_h": 2.0
+ },
+ "US Eastern": {
+  "utc": "2026-11-19T05:00:00+00:00",
+  "lead_vs_et_h": 0.0
+ },
+ "US Central": {
+  "utc": "2026-11-19T06:00:00+00:00",
+  "lead_vs_et_h": -1.0
+ },
+ "US Mountain": {
+  "utc": "2026-11-19T07:00:00+00:00",
+  "lead_vs_et_h": -2.0
+ },
+ "US Pacific": {
+  "utc": "2026-11-19T08:00:00+00:00",
+  "lead_vs_et_h": -3.0
+ },
+ "xbox_cloud_utc": "2026-11-19T06:00:00+00:00"
+}
