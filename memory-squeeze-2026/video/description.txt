@@ -1,0 +1,31 @@
+The Memory Squeeze: What AI Demand Is Doing to PC and Console Gaming (Nov 2026)
+
+AI data centers are buying memory at a pace analysts say has repriced the whole DRAM market. In 75 seconds: what the evidence shows about PC memory and console pricing, what is inference, and what no source establishes.
+
+READ THE FULL ARTICLE (claim ledger, charts, counterarguments, every source):
+[PASTE ARTICLE LINK HERE]
+
+CHAPTERS
+0:00 The question
+0:06 DRAM revenue: ~$200B, up 369% (Counterpoint)
+0:18 What shoppers see: retail DDR5 kits
+0:31 TrendForce: slower is not lower
+0:39 Nintendo and Sony on earnings day
+0:49 Why did Switch 2 sales fall? No source says
+1:00 What we know / think / don't know
+1:08 Where to read more
+
+KEY SOURCES
+Counterpoint Research Q3 2026 Global Memory Tracker (5 Nov 2026)
+TrendForce 4Q26 memory price forecast (30 Sep) and PC DRAM update (11 Nov)
+Nintendo and Sony results coverage, 5 Nov 2026
+Full source list with evidence tiers is in the article.
+
+NOTES
+Some retail price figures reach us through secondhand compilations; direction is well supported, exact dollar values are approximate.
+Forecasts are not measurements.
+
+DISCLOSURE
+Narration is an AI voice (Kokoro, am_onyx). Background music is original and synthesized. Article drafted with AI assistance and graded under an evidence-first protocol.
+
+#gaming #pchardware #AI #RAMprices #Switch2 #PS5 #gamedev

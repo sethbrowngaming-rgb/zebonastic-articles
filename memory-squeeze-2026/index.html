@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Memory Squeeze: What AI-Driven DRAM Demand Is Doing to PC and Console Gaming</title>
+<meta name="description" content="An evidence-graded look at the November 2026 memory-price squeeze: what analysts, Nintendo and Sony have actually said, what the data show, and what no source establishes.">
+<meta property="og:title" content="The Memory Squeeze: AI-Driven DRAM Demand and PC/Console Gaming">
+<meta property="og:description" content="Evidence-graded analysis with a claim ledger, charts and counterarguments. 19 November 2026.">
+<meta property="og:image" content="images/cover.png">
+<meta property="og:type" content="article">
+<style>
+  :root{--cream:#FAF9F5;--ink:#3D3929;--terra:#D97757;--grey:#6f6a5a;--line:#E8E4D8}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:Lora,Georgia,"Times New Roman",serif;font-size:19px;line-height:1.7}
+  main{max-width:760px;margin:0 auto;padding:48px 22px 96px}
+  h1{font-size:clamp(2.2rem,6vw,3.4rem);line-height:1.1;margin:.2em 0 .3em;font-weight:500}
+  h2{font-size:1.6rem;margin:2.4em 0 .6em;font-weight:500;border-top:3px solid var(--ink);padding-top:.7em}
+  h3{font-size:1.2rem;margin:1.8em 0 .4em;font-weight:600}
+  .kicker,.meta,figcaption,.tag,.src{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.78rem;letter-spacing:.02em;color:var(--grey)}
+  .kicker{text-transform:uppercase}
+  .dek{font-size:1.25rem;color:var(--ink)}
+  figure{margin:2em 0}
+  figure img{width:100%;height:auto;display:block;border:1px solid var(--line)}
+  figcaption{margin-top:.6em}
+  .tag{color:var(--terra)}
+  blockquote{margin:1.6em 0;padding-left:1em;border-left:3px solid var(--ink)}
+  .box{border:2px solid var(--ink);padding:1em 1.2em;margin:2em 0;background:#fff}
+  .box h3{margin-top:0}
+  ul{padding-left:1.2em} li{margin:.35em 0}
+  a{color:var(--ink);text-decoration-thickness:1px;text-underline-offset:3px}
+  a:hover{color:var(--terra)}
+  .src li{font-size:.8rem;line-height:1.5}
+  .video{border:2px dashed var(--grey);padding:1em;margin:2em 0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.85rem}
+  @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+</head>
+<body>
+<main>
+<article>
+<p class="kicker">Game Research Writer &middot; Gaming, hardware and AI &middot; 19 November 2026</p>
+<h1>The Memory Squeeze</h1>
+<p class="dek">AI data centers are buying memory at a pace that analysts say is repricing the whole DRAM market. This article asks what that has done to PC and console gaming so far, and, just as important, what the available evidence does not show.</p>
+<p class="meta">Sources reviewed: analyst releases (Counterpoint, TrendForce), console-maker earnings coverage (5 Nov 2026), retail price trackers, trade and games press. Every claim is graded; see the ledger below.</p>
+
+<figure>
+  <img src="images/cover.png" alt="Typographic cover reading The Memory Squeeze, with the subtitle about AI-driven DRAM demand and PC and console gaming." width="1800" height="945">
+</figure>
+
+<div class="video"><!-- VIDEO_EMBED_SLOT -->Short video companion: [PASTE VIDEO LINK HERE]</div>
+
+<h2>1. Introduction</h2>
+<p>The central question is narrow. Between roughly September and mid-November 2026, did the surge in memory prices attributed to AI infrastructure demand measurably change what gamers pay for, or can buy from, PCs and consoles, and how confident can we be in the causal story?</p>
+<p>The question matters because "AI is making everything expensive" is easy to say and hard to prove. Some of it is documented. Some of it is a plausible inference. Some of what circulates has no source behind it at all. This article separates the three.</p>
+
+<h2>2. Context</h2>
+<p>DRAM is the working memory in PCs, consoles and phones. The same fabs that supply it also supply memory for AI servers. When server buyers compete for that capacity, consumer products compete with them, either directly or through the capacity that suppliers choose to allocate.</p>
+<p>Two analyst firms frame the current picture. Counterpoint Research's Q3 2026 tracker, published 5 November, puts global DRAM revenue at roughly $200 billion, up 369% on a year earlier, and attributes the growth to demand from AI accelerators and data centers. Its senior analyst describes the moment as <q>a pricing super-cycle, not yet a volume cycle</q>, noting that bit shipments rose only about 4% in the quarter.</p>
+<p>TrendForce's 30 September outlook adds the supply side: it expects conventional DRAM contract prices to rise a further 10% to 15% quarter over quarter in Q4 2026 and warns that PC DRAM supply could contract in 2027 as capacity moves toward server applications.</p>
+
+<h2>3. Evidence</h2>
+
+<h3>3.1 Market scale and structure (observation)</h3>
+<figure>
+  <img src="images/chart-dram-revenue.png" alt="Bar chart of DRAM revenue: about 43 billion dollars in Q3 2025 (derived) versus about 200 billion dollars in Q3 2026." width="1650" height="930" loading="lazy">
+  <figcaption>Figure 1. The prior-year bar is derived by dividing $200B by 4.69 (the multiple one outlet computed from the +369% figure). Counterpoint did not publish it directly.</figcaption>
+</figure>
+<p>The revenue figure is well sourced: Counterpoint's own release, plus coverage by The Register and others, agree. One caution on interpretation. The roughly 4% bit-shipment figure is given for "this quarter" without a stated comparison period in the sources we could access, so we do not set it against the year-over-year revenue figure. What the sources do support is that price, not volume, is the dominant explanation for the revenue jump that Counterpoint reports.</p>
+<figure>
+  <img src="images/chart-dram-share.png" alt="Grouped bar chart of DRAM revenue share by supplier, Q3 2025 versus Q3 2026: Samsung 33 to 38 percent, SK hynix 33 to 29, Micron 26 to 21, CXMT 5 to 9." width="1650" height="930" loading="lazy">
+  <figcaption>Figure 2. Supplier share, as reported secondhand from Counterpoint. The 2025 SK hynix value is reported only as matching Samsung's share.</figcaption>
+</figure>
+<p>Share data matter here for one reason: the market that sells memory to consumers is concentrated among a few suppliers whose largest customers are, per Counterpoint, AI-related. Concentration is context, not proof of intent.</p>
+
+<h3>3.2 What shoppers see (strong inference, secondhand data)</h3>
+<figure>
+  <img src="images/chart-retail-ddr5.png" alt="Grouped bar chart of retail DDR5 kit prices in August 2025 versus August 2026: 2x16GB DDR5-4800 about 90 to 425 dollars, 2x32GB DDR5-5600 about 191 to 1118, 64GB DDR5-6000 about 222 to 1272." width="1650" height="930" loading="lazy">
+  <figcaption>Figure 3. Retail kit series compiled by Tech Insider from Tom's Hardware and TechTimes. Kits differ in size and speed, so the percentages are not comparable with each other.</figcaption>
+</figure>
+<p>Price trackers cited by the same compilation put the cheapest 32GB DDR5-6000 kit at $438 on 11 November, with a tracked low of $72 for that class of kit; a separate tracker reported $465 on 9 November. Those figures come through a secondhand compilation rather than directly from the trackers, so we treat the direction (sharply higher than a year ago) as well supported and the exact dollar values as approximate. TweakTown also reports that 64GB PC builds are becoming rarer as enthusiasts move to 16GB and 24GB configurations; its summary gives no percentage, so the size of that shift is unknown.</p>
+
+<h3>3.3 Is the pace changing? (observation of forecasts)</h3>
+<figure>
+  <img src="images/chart-contract-forecast.png" alt="Range chart of TrendForce quarter-over-quarter contract price forecasts: conventional DRAM 13 to 18 percent in 3Q26 and 10 to 15 percent in 4Q26; PC DRAM 18 to 23 percent in 3Q26 and 13 to 18 percent in 4Q26." width="1650" height="930" loading="lazy">
+  <figcaption>Figure 4. Forecast ranges, not outcomes. Slower growth is still growth.</figcaption>
+</figure>
+<p>TrendForce's 11 November update cuts the expected Q4 PC DRAM increase to 13% to 18%, down from 18% to 23% in Q3, and says weak PC sales and rising inventories are acting as a brake. It also notes that some PC makers bought ahead of expected increases. That detail matters for causality, and we return to it below.</p>
+
+<h2>4. Case studies</h2>
+<figure>
+  <img src="images/table-console-posture.png" alt="Table comparing Nintendo and Sony on 5 November 2026: reported hardware data, memory statement, and price action." width="1650" height="690" loading="lazy">
+  <figcaption>Table 1. Earnings-day statements. Static image.</figcaption>
+</figure>
+
+<h3>4.1 Nintendo</h3>
+<p><strong>Verified.</strong> At its 5 November results briefing, president Shuntaro Furukawa said Nintendo is not considering another Switch 2 price increase and that it can secure sufficient memory, with no major change in the memory situation. Press coverage of the same results reports Switch 2 first-half hardware sales down about 37% year over year (GodisaGeek gives 37.4%). Nintendo raised the console from $450 to $500 earlier this fall; GamesBeat reports September and ties it to expiring memory contracts, while Engadget's report lists memory costs and U.S. tariffs.</p>
+<p><strong>Interpretation.</strong> The price rise is consistent with a memory-cost effect, and Nintendo's own stated reason includes it. The sales decline is a different matter. We found no source establishing why Switch 2 sales fell. Plausible contributors include the price increase itself, a high comparison base from the console's launch window (an inference from the mid-2025 launch date, not a sourced claim), and GamesBeat's reference to a lack of recent hits. The available sources document the decline but do not establish the reason.</p>
+
+<h3>4.2 Sony</h3>
+<p><strong>Verified.</strong> Sony's Q2 results, also on 5 November, show 2.6 million PS5 units sold into the channel in July to September, taking the cumulative total to 97.9 million. Sony said it has settled memory quantities for the fiscal year starting April 2027 and that it offset memory-price rises through promotion and pricing adjustments and cost reductions. CFO Lin Tao described PS6 development as proceeding as scheduled and called the decline in new PS5 sales expected at this stage of a console's life. Game and network services revenue rose 9% and operating income 83% year over year, per GodisaGeek's summary. Sony's CEO Hiroki Totoki, as quoted by Insider Gaming, said memory prices are expected to remain very high in fiscal 2027 and the company must think carefully about what to do.</p>
+<p><strong>Interpretation.</strong> Sony's own account of its PS5 slowdown points to lifecycle, not only memory. Its memory comments bear mainly on cost and on how it plans the next console. The PS6 launch window has not been announced, so any claim that memory prices will delay or reprice it is speculation at this point; one leaker's price claim listed by TweakTown is a Tier 4 source and is not used.</p>
+
+<figure>
+  <img src="images/diagram-causal-chain.png" alt="Five-step causal chain from AI data-center demand to console and PC pricing, with each link labeled by evidence strength." width="1650" height="960" loading="lazy">
+  <figcaption>Figure 5. The argument as a chain. The weakest links are the last two.</figcaption>
+</figure>
+
+<figure>
+  <img src="images/table-supply-outlook.png" alt="Table of supply-outlook statements by TrendForce, Samsung and Micron, SK hynix, Apple and TeamGroup, with dates and source tiers." width="1650" height="780" loading="lazy">
+  <figcaption>Table 2. How long the squeeze is said to last. Static image.</figcaption>
+</figure>
+<p>These statements disagree on timing, which is itself informative: TrendForce speaks of 2027 supply, while others cited by TweakTown speak of 2028 and 2030. We do not have the original statements for the secondhand items, so the table should be read as "what is reported," not "what was said."</p>
+
+<h2>5. Counterarguments and alternative interpretations</h2>
+<h3>The strongest opposing view: this is not mainly an AI story</h3>
+<p>A skeptic can point out that console makers cite several pressures at once. Nintendo's price rise coincided with U.S. tariffs in at least one report. Sony frames its PS5 decline as ordinary late-lifecycle behavior. Gaming sales also depend on release calendars and the strength of first-party software. On this reading, memory is one cost among several, and attributing console softness to AI is a convenient narrative.</p>
+<h3>Supporting evidence for that view</h3>
+<ul>
+<li>Sony reports gaming profit rising even as PS5 hardware volume falls, which is not what a pure cost-shock story predicts.</li>
+<li>Nintendo says it has secured enough memory and is not raising prices again, so the near-term hardware impact on consoles is partly cushioned by long-term contracts.</li>
+<li>TrendForce observes that PC makers pulled purchases forward and now carry inventory. Buyer behavior, not only AI demand, shaped recent price moves.</li>
+</ul>
+<h3>Weaknesses in this article's argument</h3>
+<ul>
+<li>The retail-price evidence is secondhand and mixes products, so it supports direction better than magnitude.</li>
+<li>Analyst attribution to AI demand is an analyst interpretation. No memory manufacturer statement we reviewed directly measures how much capacity went to servers versus consumer parts.</li>
+<li>Announcements that supply is "secured" are company statements about their own position; they are not independently audited.</li>
+</ul>
+<h3>Unresolved questions</h3>
+<ul>
+<li>How much of the 2026 console and PC price movement is memory, how much tariffs, how much currency?</li>
+<li>Does the slowing contract-price growth reach retail, or do retail prices lag?</li>
+<li>Do consumers respond by buying less memory (the 64GB trend) and, if so, does that ease prices?</li>
+</ul>
+
+<h2>6. Limitations</h2>
+<ul>
+<li>Several figures reach us through aggregators and press summaries rather than original filings. Where this is the case it is stated.</li>
+<li>Forecasts (TrendForce) and executive statements about the future are not measurements.</li>
+<li>Gaming news moves fast. GTA VI is reported by GamesBeat as releasing 19 November 2026; we did not verify launch status or sales and draw no conclusions from it.</li>
+<li>Counterpoint's headline numbers are reproduced widely, but we read the release and coverage, not the paid underlying dataset.</li>
+</ul>
+
+<h2>7. Conclusion</h2>
+<div class="box">
+<h3>What we know</h3>
+<ul>
+<li>Counterpoint reports Q3 2026 DRAM revenue near $200 billion, up 369% year over year, led by price rather than volume.</li>
+<li>TrendForce forecasts further Q4 contract-price rises, at a slower pace than Q3, and warns of a possible PC DRAM supply contraction in 2027.</li>
+<li>Nintendo raised the Switch 2 price this fall and says it is not planning another increase. Sony says it has secured memory through its next fiscal year.</li>
+</ul>
+<h3>What we think</h3>
+<ul>
+<li>AI-driven server demand is a major cause of the memory price rise (strong inference; analysts attribute it, the supply shift is documented as a forecast).</li>
+<li>Retail PC memory is several times more expensive than a year ago (strong inference; secondhand data).</li>
+<li>Memory costs contributed to console price increases (strong inference; company statements, with tariffs also cited).</li>
+</ul>
+<h3>What we don't know</h3>
+<ul>
+<li>Why Switch 2 sales fell.</li>
+<li>How large the 64GB-build decline is.</li>
+<li>Whether slower contract-price growth will reach shelf prices, and whether the PS6 timeline or price will change.</li>
+</ul>
+</div>
+
+<h2>Review notes</h2>
+<p>A hostile read of the first draft produced these changes: a chart pairing the 369% revenue figure with the 4% shipment figure was dropped because their base periods are not comparable; a causal sentence linking memory prices to Switch 2 sales was removed for lack of evidence; and a quoted claim from a company executive about PCs wasting scarce memory was left out as an unverified, contested remark. The claim ledger below shows the final grading.</p>
+<figure>
+  <img src="images/table-claim-ledger.png" alt="Claim ledger table with claims, evidence and confidence levels." width="1650" height="960" loading="lazy">
+  <figcaption>Table 3. Claim ledger summary. Static image.</figcaption>
+</figure>
+
+<h2>8. Sources</h2>
+<ul class="src">
+<li>Counterpoint Research, "DRAM super cycle nears $200B," 5 Nov 2026 &mdash; <a href="https://www.counterpointresearch.com/en/insights/dram-super-cycle-nears-dollar-200b">counterpointresearch.com</a> (Tier 2, analyst release)</li>
+<li>The Register, "Memory makers mint megabucks while buyers beg for mercy" &mdash; <a href="https://www.theregister.com/a/5307846">theregister.com</a> (Tier 2)</li>
+<li>TrendForce press release, 30 Sep 2026 &mdash; <a href="https://www.trendforce.com/presscenter/news/20260930-13258.html">trendforce.com</a> (Tier 2); Evertiq summary &mdash; <a href="https://evertiq.com/news/2026-10-02-ai-keeps-memory-prices-climbing-in-q4-as-consumer-demand-weakens">evertiq.com</a></li>
+<li>TrendForce 11 Nov 2026 PC DRAM update via iConnect007 &mdash; <a href="https://iconnect007.com/article/152347/pc-oems-adjust-2027-memory-procurement-amid-rising-inventories/152344/aep">iconnect007.com</a> (Tier 2, secondhand)</li>
+<li>SammyGuru, Samsung 38% share citing Counterpoint &mdash; <a href="https://sammyguru.com/samsung-reclaims-its-dram-crown-with-a-38-share-in-q3-2026/">sammyguru.com</a>; XenoSpectrum on CXMT share &mdash; <a href="https://xenospectrum.com/en/cxmt-dram-share-q3-2026/">xenospectrum.com</a> (Tier 3, secondhand)</li>
+<li>Tech Insider, DDR5 price compilation &mdash; <a href="https://tech-insider.org/ddr5-ram-prices-2026-pc-builders/">tech-insider.org</a> (Tier 3, aggregator of Tom's Hardware, TechTimes and others)</li>
+<li>TweakTown RAM-price hub &mdash; <a href="https://www.tweaktown.com/hubs/ram-prices/index.html">tweaktown.com</a> (Tier 2/3, headline summaries)</li>
+<li>GamesRadar, Nintendo no further Switch 2 price rise, 5 Nov 2026 &mdash; <a href="https://www.gamesradar.com/hardware/tech/no-more-switch-2-price-hikes-yet-nintendo-president-says-as-the-company-weathers-the-ai-driven-memory-shortage/">gamesradar.com</a>; GodisaGeek (37.4%) &mdash; <a href="https://godisageek.com/2026/11/switch-2-price-hike-nintendo/">godisageek.com</a>; Nintendo Everything &mdash; <a href="https://nintendoeverything.com/?p=928993">nintendoeverything.com</a>; GamesBeat &mdash; <a href="https://gamesbeat.com/?p=338391">gamesbeat.com</a>; Engadget &mdash; <a href="https://engadget.com/2167631/nintendo-raises-switch-2-prices">engadget.com</a></li>
+<li>Sony Q2 FY2026 coverage: GodisaGeek &mdash; <a href="https://godisageek.com/2026/11/sony-memory-supply-ps6-investment-2027/">godisageek.com</a>; Playday &mdash; <a href="https://playday.one/2026/11/05/sony-financial-results-ps5-approaches-100-million-console-sold/">playday.one</a>; GamingBolt &mdash; <a href="https://gamingbolt.com/?p=656384">gamingbolt.com</a>; Insider Gaming &mdash; <a href="https://insider-gaming.com/ps6-launch-window-remains-uncertain-amid-memory-prices/">insider-gaming.com</a>; Outlook Respawn (March 2026 PS5 price) &mdash; <a href="https://respawn.outlookindia.com/amp/story/gaming/gaming-news/sony-flags-ps5-slump-and-ps6-uncertainty-amid-chip-costs">outlookindia.com</a></li>
+<li>Playday weekly roundup, 2-8 Nov 2026 &mdash; <a href="https://playday.one/2026/11/08/weekly-roundup-november-2-8/">playday.one</a></li>
+</ul>
+<p class="meta">Charts and tables on this page are static images generated from the figures cited. Cover and diagram are original illustrations. Drafted with AI assistance; claims graded per the Game Research Writer protocol.</p>
+</article>
+</main>
+</body>
+</html>
