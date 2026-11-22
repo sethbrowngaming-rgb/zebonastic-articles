@@ -52,6 +52,6 @@ Each folder holds the article page, its charts and tables (`images/`), a 9:16 sh
 - [Infinity Loop essay](infinity-loop-essay.html)
 - [Unity C# course](unity_course.html)
 - [Game animation teachnar](teachnar_game_animation.html)
-- Privacy policies: [general](privacy-policy.html), [Cold](cold-privacy-policy.html)
+- [Policy documents](policies): privacy policies for my apps and games (general, Cold, Base Clicker). The old page addresses still redirect here.
 
 Articles are also published on Substack: [zebonastic.substack.com](https://zebonastic.substack.com)
