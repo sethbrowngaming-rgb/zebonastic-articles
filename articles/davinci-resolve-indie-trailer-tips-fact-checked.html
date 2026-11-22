@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cutting the Trailer: DaVinci Resolve Techniques for Indie Devs Making Promo Content</title>
+<style>body{font-family:Georgia,serif;background:#FAF9F5;color:#3D3929;max-width:760px;margin:0 auto;padding:32px 22px 80px;line-height:1.7}h1{line-height:1.2}h2{border-top:3px solid #3D3929;padding-top:.5em;margin-top:2em;font-size:1.3rem}a{color:#3D3929;text-decoration-color:#D97757}img{max-width:100%;height:auto}table{border-collapse:collapse;width:100%;font-size:.9rem;margin:1em 0;display:block;overflow-x:auto}th,td{border:1px solid #cfc9b8;padding:6px 8px;text-align:left;vertical-align:top}th{background:#ece8da}code{background:#ece8da;padding:1px 4px;font-size:.9em}pre{background:#ece8da;padding:12px;overflow-x:auto}blockquote{border-left:4px solid #D97757;margin-left:0;padding-left:1em;color:#5a5546}.back{font-size:.9rem}</style></head>
+<body>
+<p class="back"><a href="../index.html">&larr; All articles</a></p>
+<h1>Cutting the Trailer: DaVinci Resolve Techniques for Indie Devs Making Promo Content</h1>
+<p><em>A fact-checked, evidence-scoped guide. Several commonly repeated claims about DaVinci Resolve and YouTube Shorts turned out to be outdated or imprecise on verification — corrected below, with the claim ledger and sourcing at the end.</em></p>
+<hr />
+<h2>1. Introduction</h2>
+<p>The question this piece answers is narrow and practical: <strong>what in DaVinci Resolve actually moves the needle when an indie developer is cutting a short trailer or promo clip for a Shorts-style vertical upload, and which popular claims about it don't hold up?</strong></p>
+<p>It would be easy to write "just use these ten features" and call it a guide. That's marketing language, not a technical answer. The useful answer is more specific: a small number of features (proxy media, the Fusion node graph, keyframed speed ramping, and export settings matched to what the platform actually asks for) account for most of the practical difference between a promo clip that looks intentional and one that looks like a rough cut with music under it. Several other widely repeated claims — a hard 60-second Shorts limit, "Studio guarantees hardware-accelerated decoding" — turned out to be outdated or overstated when checked against current primary sources, and are corrected rather than repeated.</p>
+<h2>2. Context</h2>
+<p>DaVinci Resolve ships as two products: a free version and DaVinci Resolve Studio (a one-time $295 purchase, no subscription). Both share the same four "pages" relevant here — <strong>Cut/Edit</strong> (the timeline), <strong>Fusion</strong> (node-based compositing and motion graphics), <strong>Color</strong>, and <strong>Fairlight</strong> (audio) — plus <strong>Deliver</strong>, where the final export is configured. For an indie developer working alone, the free version covers most of a trailer edit; the paid tier matters mainly for noise reduction, HDR grading, and a handful of AI-assisted tools that a short promo clip rarely needs.</p>
+<h2>3. Evidence</h2>
+<h3>3.1 Free vs. Studio: what actually changes for a trailer edit</h3>
+<p>Blackmagic Design's own product page states the free version edits and finishes <strong>up to 60 fps at Ultra HD (3840×2160)</strong>; Studio raises that ceiling to <strong>120 fps at up to 32K</strong>. For a vertical promo clip destined for a phone screen, that ceiling is almost never the constraint — Ultra HD at 60 fps is far beyond what a Shorts upload needs.</p>
+<p>What Studio actually adds that's relevant to trailer work: AI-assisted spatial <em>and</em> temporal noise reduction (useful if your capture footage is noisy — screen-recorded gameplay from a compressed source, for instance), Dolby Vision/HDR10+ grading, Neural Engine tools (Magic Mask, Speed Warp, Smart Reframe, Super Scale upscaling), about 45 additional Resolve FX, and AI audio tools (voice isolation, dialogue separator, music remixer) plus Dolby Atmos mastering. None of that is required to cut a competent 30–90 second promo; Smart Reframe (automatic reframing to a different aspect ratio) is the one Studio-only feature that most directly targets a "cut this for Shorts" workflow, since it can help repurpose a horizontal capture into vertical without a fully manual reframe pass.</p>
+<p><strong>One claim worth correcting rather than repeating:</strong> Blackmagic lists "accelerated H.264 and H.265 hardware decoding" as a Studio feature, which reads like a straightforward reason to upgrade if your source footage is H.264/H.265 (most phone and capture-card footage is). Independent hardware testing tells a messier story. Puget Systems, which benchmarks Resolve against specific GPU/driver combinations, found that in the most recent Resolve Studio version they tested, none of Intel's 10th–14th generation Quick Sync hardware or Core Ultra 2 registered a confirmed pass for H.264/H.265 hardware decode, and that support depends heavily on the exact bit depth and chroma-subsampling profile of the source file — not just the codec name. Their AMD results were similarly empty. In plain terms: <strong>owning Studio does not reliably guarantee a hardware-decode speed boost</strong>, even though it's marketed as a Studio capability. This matters because it changes the advice that follows — proxies (3.3) are the more dependable performance lever regardless of which version you own.</p>
+<h3>3.2 Fusion: the node graph, not a stack of layers</h3>
+<p>Fusion is DaVinci Resolve's compositing and motion-graphics page, included in both the free and Studio versions. Blackmagic's own description of it is a <strong>node-based workflow</strong> — effects and elements connect as a flowchart rather than stacking as layers, which is the more familiar mental model from Photoshop-style tools or other NLEs' title systems.</p>
+<p>For trailer titles specifically, this matters because Fusion's text tools support <strong>sequential reveal animation</strong> — text can animate in line by line, word by word, or character by character via modifiers on a <strong>spline-based keyframe editor</strong> — which is the mechanism behind the "typewriter" or staggered-word title style common in game trailers. Fusion also includes 2D and 3D text controls, 2D/planar/3D camera tracking, and mask/rotoscope tools for isolating an element (a logo, a UI overlay) to animate independently of the background plate.</p>
+<p>Practical framing for a first Fusion title: start from <strong>MediaIn → Transform → Text+ → Merge → MediaOut</strong> — position/scale the incoming frame, add a text layer, merge it over the video, and output. Everything more elaborate (a blur pass, a mask, a second text layer) is additional nodes wired into that same chain, not a replacement for it.</p>
+<h3>3.3 Proxy media: the actual performance lever, especially on integrated graphics</h3>
+<p>If C11 above sounds like a debate for people with expensive GPUs, it's directly relevant to a laptop with only integrated graphics — the kind of machine plenty of solo/indie developers actually edit on. DaVinci Resolve's proxy system (available in both versions) can generate lower-resolution stand-ins for source footage at <strong>Original, Half, Quarter, or One-Sixteenth</strong> of the original <em>linear</em> resolution, switched in via Playback → Proxy Handling → "Prefer Proxies." DNxHR is the commonly recommended intermediate codec on Windows (ProRes on Mac), with DNxHR LB for the smallest files; going below roughly 256 pixels in either dimension risks generation errors, so "One-Sixteenth" isn't infinitely shrinkable.</p>
+<p>The reason this matters more than the fraction names suggest: proxy resolution shrinks <em>linearly</em>, but the pixels a CPU or GPU actually has to decode and display shrink by the <strong>square</strong> of that fraction, because resolution is two-dimensional. A Half-resolution proxy isn't "half the work" — it's roughly a quarter. A Quarter-resolution proxy is roughly one-sixteenth the pixel count. One-Sixteenth resolution is under half a percent of the original frame's pixels.</p>
+<p>Combined with 3.1's finding — that hardware-accelerated decode of H.264/H.265 source footage is not something either version of Resolve can be counted on to deliver automatically — proxies are the workflow adjustment that actually helps on a laptop without a discrete GPU, regardless of whether you're on the free version or Studio. Generating Quarter-resolution proxies for a phone-shot or screen-captured source before editing, then switching back to full resolution only for the final grade and export, is a substantially larger effect than anything gated behind the $295 upgrade for this specific bottleneck.</p>
+<h3>3.4 Speed ramping: a keyframed curve, not a single "slow-mo" switch</h3>
+<p>A speed ramp — footage that eases from normal speed into a fast or slow passage and back — is built in Resolve as a <strong>keyframed velocity curve</strong> rather than one fixed speed value applied to a whole clip. Concretely, that means placing multiple speed keyframes along a clip's retime control (a "hold" segment, a ramp into a different speed, a second "hold," a ramp back out) rather than choosing one number in a speed dialog and applying it uniformly.</p>
+<p>This is the mechanism behind the common trailer technique of holding a shot at reduced speed for emphasis, accelerating through a transition or impact moment, and settling back down — rather than a single abrupt speed change, which reads as a jump cut rather than a deliberate rhythm choice.</p>
+<h3>3.5 Exporting for YouTube Shorts: what's actually specified, and what isn't</h3>
+<p>YouTube's own encoding-recommendations page specifies a video bitrate ladder by resolution for standard-frame-rate SDR uploads: roughly 1 Mbps at 360p, 2.5 Mbps at 480p, 5 Mbps at 720p, 8 Mbps at 1080p, 16 Mbps at 1440p, and 35–45 Mbps at 4K, delivered as H.264 in an MP4 container (progressive, faststart, closed GOP at half the frame rate, 4:2:0 chroma), with AAC-LC or Opus audio at 48 kHz (128 kbps mono / 384 kbps stereo).</p>
+<p>That page describes standard 16:9 delivery and states the player auto-adapts to other aspect ratios; it does not publish a separate bitrate table specific to vertical Shorts. The practical inference — not a quoted spec — is that a 1080×1920 vertical export has the same total pixel count as a 1920×1080 horizontal one, so the 1080p rung of the ladder (8 Mbps) is the reasonable target bitrate for a 1080-wide-equivalent vertical export, even though YouTube doesn't say so in those exact words.</p>
+<p><strong>A claim worth correcting:</strong> a substantial share of current tutorial and SEO content about YouTube Shorts still states a 60-second maximum length. YouTube's own help documentation states Shorts can now run <strong>up to three minutes</strong>, with the categorizing factor being a square-or-vertical aspect ratio at or under that length — not a fixed 60-second cutoff. That said, no official YouTube source located in this research pass specifies an <em>optimal</em> length for audience retention on Shorts; claims that a particular short duration (e.g., 30 seconds) "performs best" are common in creator-advice content but were not backed by a citable source in this pass, so this article does not repeat a specific number as if it were established.</p>
+<h2>4. Case Study: A 45-Second Vertical Promo Clip, End to End</h2>
+<p><strong>Verified mechanics.</strong> Starting from a horizontal gameplay or trailer capture: generate Quarter-resolution proxies before editing (3.3) if working on integrated graphics; cut the rough sequence on the Edit page; reframe or crop to a vertical composition (manually, or via Smart Reframe if on Studio); build a title card in Fusion using the MediaIn → Transform → Text+ → Merge chain (3.2), with sequential word-reveal for a hook line; apply a speed-ramp curve (3.4) across a key gameplay beat for emphasis; switch proxy handling back to full-resolution source for the final pass; export via Deliver as H.264 in MP4, matching the 1080p bitrate rung (8 Mbps) as a reasonable vertical-equivalent target (3.5).</p>
+<p><strong>Design analysis.</strong> Each step maps to a specific, sourced mechanism rather than a general "make it look polished" instruction — proxies address decode load, the node graph addresses title construction, keyframed retiming addresses pacing, and the export settings address what YouTube's own ladder actually asks for.</p>
+<p><strong>Limitations.</strong> This sequence is a synthesis of the individually sourced techniques above, not a single documented "recipe" from Blackmagic or YouTube — no source in this research pass describes this exact end-to-end pipeline as a named or endorsed workflow. It is this article's own combination of separately verified parts.</p>
+<p><strong>Counterarguments.</strong> A developer with a strong existing After Effects or Premiere pipeline may find switching tools for these techniques isn't worth the workflow disruption purely for one promo clip; the case for Resolve here is cost (free tier covers all of the above except Smart Reframe) and having color, edit, and Fusion in one application, not that it's uniquely capable of any single technique — competing NLEs support proxies, node or layer-based motion graphics, and keyframed retiming as well.</p>
+<h2>5. Counterarguments and Alternative Interpretations</h2>
+<p><strong>The strongest opposing viewpoint:</strong> the free version of DaVinci Resolve is frequently marketed by third parties (and by Blackmagic itself, implicitly) as "everything most people need," but the Studio-exclusive noise reduction and Neural Engine tools are the specific gap that matters most for footage that's already compromised going in — heavily compressed screen captures, low-light phone footage. An indie developer whose promo source material is genuinely noisy may find the free version's ceiling more limiting in practice than this article's framing (which treats Studio as optional for this specific use case) suggests.</p>
+<p><strong>Supporting evidence for that criticism:</strong> Toolfarm's independent comparison singles out Studio's noise reduction as "one of the most-cited reasons people upgrade" — a repeated, independently-sourced signal that this is where free-tier users most often hit a wall, not a claim this article can dismiss.</p>
+<p><strong>Weaknesses in this article's own argument:</strong> the case study in Section 4 is a synthesis, not a verified named workflow, and the "8 Mbps for vertical 1080-equivalent" export recommendation (3.5) is this article's engineering inference from YouTube's horizontal-resolution ladder, not a quotation of a Shorts-specific official figure — because no such official vertical-specific bitrate table was located in this research pass.</p>
+<p><strong>Unresolved questions:</strong> whether Studio's marketed hardware-decode acceleration works reliably on any <em>specific</em> current consumer GPU/driver/footage combination is not settled by the sources reviewed here (Section 3.1); Puget Systems' own tables are a snapshot against one tested Resolve version and are the kind of result that can change with the next point release.</p>
+<h2>6. Limitations of This Analysis</h2>
+<p>This research pass relied on Blackmagic Design's own product pages, YouTube's official help documentation, one specialist hardware-benchmarking publication (Puget Systems), and independent editing-tutorial sources for proxy-workflow and speed-ramp mechanics; it did not include hands-on benchmarking of proxy performance on any specific machine, a direct read of Blackmagic's reference manual PDF, or developer interviews. Where a claim rested on a single non-vendor source (proxy resolution fractions; the Fairlight sound library's free-tier availability), that is flagged in the claim ledger rather than presented with unearned confidence.</p>
+<h2>7. Conclusion</h2>
+<p><strong>What we know:</strong> the free-vs-Studio frame-rate/resolution ceiling, Studio's specific exclusive feature list, YouTube's official encoding ladder and its current three-minute Shorts length, and the mechanics of Fusion's node graph and Resolve's speed-ramp keyframing are all confirmed against official vendor or platform documentation.</p>
+<p><strong>What we think:</strong> proxy media, not the free/Studio divide, is the more consequential performance lever for an indie developer editing on integrated graphics — because hardware-accelerated decode of common footage formats is not reliably available even in the paid tier, per independent benchmarking — and the combination of proxies, Fusion titles, and keyframed speed ramps covers most of what a short promo clip needs without requiring the $295 upgrade.</p>
+<p><strong>What we don't know:</strong> whether Studio's hardware-decode marketing claim holds on any specific current hardware configuration a given reader owns; whether the free version includes the bundled Fairlight sound-effects library (single-source, unconfirmed in this pass); and whether any particular Shorts length has a genuine, source-backed retention advantage — no citable figure for that was found.</p>
+<hr />
+<h2>Claim Ledger Summary</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Claim</th>
+<th>Confidence</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C1</td>
+<td>Free version caps at 60 fps / Ultra HD</td>
+<td>Confirmed</td>
+<td>Unchanged</td>
+</tr>
+<tr>
+<td>C2</td>
+<td>Studio raises cap to 120 fps / 32K</td>
+<td>Confirmed</td>
+<td>Unchanged</td>
+</tr>
+<tr>
+<td>C3</td>
+<td>Studio-exclusive AI noise reduction</td>
+<td>Confirmed</td>
+<td>Unchanged</td>
+</tr>
+<tr>
+<td>C4</td>
+<td>Studio-exclusive Dolby Vision/HDR10+</td>
+<td>Confirmed</td>
+<td>Unchanged</td>
+</tr>
+<tr>
+<td>C5</td>
+<td>Studio "hardware H.264/H.265 decode"</td>
+<td>Confirmed (marketed)</td>
+<td><strong>Complicated by independent test data — both reported</strong></td>
+</tr>
+<tr>
+<td>C6</td>
+<td>Studio-exclusive Neural Engine AI tools</td>
+<td>Confirmed</td>
+<td>Unchanged</td>
+</tr>
+<tr>
+<td>C7</td>
+<td>Studio audio/Fairlight additions</td>
+<td>Confirmed</td>
+<td>Free-tier baseline not independently itemized</td>
+</tr>
+<tr>
+<td>C8</td>
+<td>Fusion node graph, ships free + Studio</td>
+<td>Confirmed</td>
+<td>Unchanged</td>
+</tr>
+<tr>
+<td>C9</td>
+<td>Proxy resolution fractions (½, ¼, 1/16)</td>
+<td>Strong inference</td>
+<td>Single T3 source, not vendor-cross-checked</td>
+</tr>
+<tr>
+<td>C10</td>
+<td>Proxy pixel-load math (square of fraction)</td>
+<td>Confirmed (computed)</td>
+<td>This article's own derivation</td>
+</tr>
+<tr>
+<td>C11</td>
+<td>YouTube official bitrate ladder</td>
+<td>Confirmed</td>
+<td>Unchanged</td>
+</tr>
+<tr>
+<td>C12</td>
+<td>Shorts now allow up to 3 minutes</td>
+<td>Confirmed</td>
+<td><strong>Corrects widely repeated "60 second" claim</strong></td>
+</tr>
+<tr>
+<td>C13</td>
+<td>1080×1920 as Shorts resolution / 8 Mbps target</td>
+<td>Weak inference / reasonable engineering inference</td>
+<td>Not an official Shorts-specific figure</td>
+</tr>
+<tr>
+<td>C14</td>
+<td>Fairlight bundled sound library (500+ effects)</td>
+<td>Confirmed (existence)</td>
+<td>Free-tier inclusion unconfirmed</td>
+</tr>
+<tr>
+<td>C15</td>
+<td>Speed ramp = keyframed velocity curve</td>
+<td>Confirmed</td>
+<td>Sourced to converging T2/T3 tutorials, not one T1 citation</td>
+</tr>
+</tbody>
+</table>
+<p>Full evidence, sourcing, and alternative explanations for each claim are in <code>research/claim-ledger.md</code>.</p>
+<h2>Fact-Check Pass</h2>
+<p>Every sentence containing a number, a version name, a named company/product, or the words <em>because, caused, designed, solved, proved, first, largest, always, never, guarantees</em> was individually reviewed. One claim was reclassified from an implied "Confirmed" (Studio's hardware-decode marketing) to a <strong>flagged, both-sides-reported</strong> claim after independent benchmarking data (Puget Systems) complicated the vendor's framing — the rewrite presents both rather than picking one. One commonly repeated public claim (Shorts capped at 60 seconds) was checked directly against YouTube's own current help page and found to be outdated; the article states the current figure (three minutes) and explicitly flags the outdated version rather than silently using the correct one. No claim in this article asserts a specific "best" Shorts length, a benchmarked FPS/performance number this pass did not measure, or that any technique is exclusive to DaVinci Resolve among editing tools.</p>
+<h2>Sources</h2>
+<ul>
+<li><a href="https://www.blackmagicdesign.com/products/davinciresolve/studio">Blackmagic Design — DaVinci Resolve Studio</a></li>
+<li><a href="https://www.blackmagicdesign.com/products/fusion">Blackmagic Design — Fusion</a></li>
+<li><a href="https://www.toolfarm.com/tutorial/in-depth-davinci-resolve-studio-vs-the-free-version/">Toolfarm — In Depth: DaVinci Resolve Studio vs the Free Version (Updated for 21)</a></li>
+<li><a href="https://www.pugetsystems.com/labs/articles/what-h-264-and-h-265-hardware-decoding-is-supported-in-davinci-resolve-studio-2122/">Puget Systems — What H.264 and H.265 Hardware Decoding is Supported in DaVinci Resolve Studio?</a></li>
+<li><a href="https://beginnersapproach.com/davinci-resolve-proxy/">Beginner's Approach — DaVinci Resolve Proxy (Tips &amp; Fixes)</a></li>
+<li><a href="https://nofilmschool.com/davinici-resolve-fairlight-update">No Film School — Access 500+ Royalty Free Foley Effects with DaVinci Resolve 16.2</a></li>
+<li><a href="https://support.google.com/youtube/answer/1722171?hl=en">YouTube Help — Recommended upload encoding settings</a></li>
+<li><a href="https://support.google.com/youtube/answer/15424877?hl=en">YouTube Help — Understand three-minute YouTube Shorts</a></li>
+<li><a href="https://www.cined.com/creating-speed-ramps-in-davinci-resolve-quick-tip/">CineD — Creating Speed Ramps in DaVinci Resolve, Quick Tip</a></li>
+</ul>
+</body></html>

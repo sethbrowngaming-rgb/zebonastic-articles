@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Architecture of Player Progression</title>
+<style>body{font-family:Georgia,serif;background:#FAF9F5;color:#3D3929;max-width:760px;margin:0 auto;padding:32px 22px 80px;line-height:1.7}h1{line-height:1.2}h2{border-top:3px solid #3D3929;padding-top:.5em;margin-top:2em;font-size:1.3rem}a{color:#3D3929;text-decoration-color:#D97757}img{max-width:100%;height:auto}table{border-collapse:collapse;width:100%;font-size:.9rem;margin:1em 0;display:block;overflow-x:auto}th,td{border:1px solid #cfc9b8;padding:6px 8px;text-align:left;vertical-align:top}th{background:#ece8da}code{background:#ece8da;padding:1px 4px;font-size:.9em}pre{background:#ece8da;padding:12px;overflow-x:auto}blockquote{border-left:4px solid #D97757;margin-left:0;padding-left:1em;color:#5a5546}.back{font-size:.9rem}</style></head>
+<body>
+<p class="back"><a href="../index.html">&larr; All articles</a></p>
+<h1>The Architecture of Player Progression</h1>
+<h3>Mathematical, Psychological, and Systemic Mechanics in Game Design — A Fact-Checked Analysis</h3>
+<p><em>Game Research Writer | Claim-ledger and devil's-advocate review completed 2026-08-25. See <code>research/claim-ledger.md</code> for the full source-by-source audit behind every correction in this revision.</em></p>
+<hr />
+<h2>1. Introduction</h2>
+<p>Player progression is the set of systems that change a player's state over time — through learned skill, accumulated numbers, acquired items, unlocked story, or social standing. Nearly every modern game uses some combination of these systems to sequence content, manage difficulty, and sustain engagement across dozens or hundreds of hours.</p>
+<p>This piece asks a narrower question than "how does progression work": <strong>which specific claims commonly made about progression design — mathematical formulas, named psychological effects, and cited case studies — are actually supported by primary evidence, and which are repeated because they sound authoritative rather than because they were confirmed?</strong></p>
+<p>A prior draft of this analysis stated several formulas and case-study details as settled fact. Research for this revision could not confirm all of them. Where evidence was found, it is cited. Where it was not, the claim was either removed or rewritten as an open question. That process is documented in full in the accompanying claim ledger.</p>
+<hr />
+<h2>2. Context: A Taxonomy of Progression Types</h2>
+<p>Design writing commonly groups progression systems into a small number of archetypes based on what changes and why the player cares. The table below is an organizing framework for this article, not a citation to a single canonical industry source — no primary document was found that defines exactly these six categories with these labels. Treat it as an analytical lens.</p>
+<table>
+<thead>
+<tr>
+<th>Paradigm</th>
+<th>Core Mechanism</th>
+<th>Primary Motivator (per SDT/PENS, §3)</th>
+<th>Primary Balancing Challenge</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Skill-Based</td>
+<td>Player's own motor and tactical learning; avatar stats often static</td>
+<td>Competence</td>
+<td>High entry barrier; frustration risk</td>
+</tr>
+<tr>
+<td>XP-Based</td>
+<td>Numerical accumulation to discrete level thresholds</td>
+<td>Competence / accomplishment</td>
+<td>Pacing decay; repetitive grind</td>
+</tr>
+<tr>
+<td>Item-Based</td>
+<td>Gear acquisition, rarity tiers, crafting, loadouts</td>
+<td>Autonomy / collection</td>
+<td>Power creep, inventory bloat</td>
+</tr>
+<tr>
+<td>Narrative</td>
+<td>Branching story, dialogue, world-state change</td>
+<td>Autonomy / curiosity</td>
+<td>Production cost, narrative bloat</td>
+</tr>
+<tr>
+<td>Social</td>
+<td>Reputation, guild rank, leaderboards</td>
+<td>Relatedness / status</td>
+<td>Toxicity, entry barriers</td>
+</tr>
+<tr>
+<td>Hybrid</td>
+<td>Two or more of the above, interlocked</td>
+<td>Multiple, simultaneously</td>
+<td>Complexity, feature overload</td>
+</tr>
+</tbody>
+</table>
+<p>Most commercially successful open-world and live-service titles are hybrids: XP-driven stat growth layered over item crafting, gated behind narrative milestones, wrapped around skill-based combat. This is a widely repeated design-literature pattern (see, e.g., GDC-style postmortems and community formula archives), not a single confirmed statistic.</p>
+<hr />
+<h2>3. Evidence</h2>
+<h3>3.1 The mathematics of leveling curves</h3>
+<p>Two quantities describe any numerical leveling system: the cumulative experience required to reach level <em>n</em> (P<sub>n</sub>), and the incremental gap between consecutive levels (S<sub>n</sub>):</p>
+<p><strong>P<sub>n</sub> = Σ(i=1 to n−1) S<sub>i</sub>  and  S<sub>n</sub> = P<sub>n</sub> − P<sub>n−1</sub></strong></p>
+<p>This is a mathematical identity, not an empirical claim — it holds by definition for any leveling table. <strong>Confidence: Confirmed</strong> (as arithmetic; it says nothing about which curve a given game should use).</p>
+<p>The choice of <em>curve family</em>, however, is a design decision with real behavioral consequences, and different genres consistently favor different families:</p>
+<table>
+<thead>
+<tr>
+<th>Curve Class</th>
+<th>Formula Shape</th>
+<th>Behavior</th>
+<th>Where it's commonly seen</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linear</td>
+<td>f(x) = ax + b</td>
+<td>Constant level-up cost; grows <em>easier</em> to reach relative to earlier levels</td>
+<td>Arcade titles, flat seasonal battle passes</td>
+</tr>
+<tr>
+<td>Polynomial / Power</td>
+<td>P(L) = baseXP × (L−1)^exponent</td>
+<td>Accelerating but controlled cost growth</td>
+<td>JRPGs, action-RPGs, single-player campaigns</td>
+</tr>
+<tr>
+<td>Exponential</td>
+<td>E(L) = a × (1−b^L)/(1−b)</td>
+<td>Fast early levels, extreme late-game cost</td>
+<td>MMORPGs, long-lived live-service games, idle games</td>
+</tr>
+<tr>
+<td>Sigmoidal / Logistic</td>
+<td>S(x) = a / (1 + e^(−kx))</td>
+<td>Slow start, fast middle, tapering end</td>
+<td>Skill-rank distributions, battle-pass tiers</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Confidence: Strong inference.</strong> This pattern is consistent across many independent designer write-ups and community formula archives (Tier 3 design-practice consensus), but no single Tier-1 document confirms it as a universal law — some titles deliberately mix curve families within one system.</p>
+<p>A structural tension follows directly from these shapes: if a game's <em>reward payout</em> (XP per kill, per quest) scales linearly or stays flat, but the <em>level-cost curve</em> is exponential, the time required per level rises faster than the reward that funds it. That mismatch — not "bad design" in the abstract — is the mechanical definition of what players call "the grind." Designers commonly counter it with piecewise or dynamically-scaled reward functions rather than flattening the underlying curve, since a flattened curve removes the milestone pacing the curve was chosen to create.</p>
+<p>One previous version of this article presented a specific formula — ΔE(L) = ((8×L) + Diff(L)) × MXP(L) × RF(L) — as a real, sourced industry equation. <strong>No primary source for this exact formula could be located.</strong> Per the evidence-gap rule this analysis follows, the specific formula has been removed. What can be confirmed is the <em>general pattern</em> it was gesturing at: many level-scaled reward systems multiply a base per-level term by a difficulty factor, a per-encounter value factor, and a global rate-tuning factor. That pattern is common; this particular equation is not confirmed to belong to any specific shipped game.</p>
+<p>Sigmoidal (S-curve) overlays on local progression tiers — the idea that a convex "safe exploration" phase, a steep "reinforcement" phase, and a concave "anticipation" phase can be nested inside a longer exponential curve — is a coherent and frequently described design <em>technique</em>, consistent with general S-curve skill-acquisition literature. It is presented here as <strong>interpretation</strong>, not as a confirmed mechanism inside any specific named game, because the original source material did not cite one.</p>
+<h3>3.2 Psychological frameworks</h3>
+<p><strong>Self-Determination Theory and the PENS model.</strong> The Player Experience of Need Satisfaction (PENS) model was developed by Richard Ryan, C. Scott Rigby, and Andrew Przybylski and published in <em>Motivation and Emotion</em> (2006). It applies Self-Determination Theory's three basic psychological needs — competence, autonomy, and relatedness — to game design: competence maps to clear growth feedback (XP bars, rank titles), autonomy maps to meaningful choice (skill trees, loadouts), and relatedness maps to social context (guilds, leaderboards). <strong>Confidence: Confirmed.</strong> This is a real, peer-reviewed, frequently cited framework, and it is the strongest-evidenced psychological claim in this article.</p>
+<p><strong>Operant conditioning and reinforcement schedules.</strong> B.F. Skinner's operant conditioning research, and specifically the finding that <em>variable</em>-ratio reinforcement schedules produce the highest response rates and the greatest resistance to extinction (compared to fixed schedules), is well established in behavioral psychology and has been extended by peer-reviewed research specifically on loot boxes (including studies indexed in PubMed Central linking rare-reward reveals to elevated arousal and urge-to-continue responses). <strong>Confidence: Confirmed</strong> as a general psychological mechanism.</p>
+<p>Where this claim is <em>not</em> fully evidenced is at the level of intent: saying "variable-ratio loot systems exploit a well-documented psychological mechanism" is supported; saying "Game X's loot table was designed specifically to exploit players psychologically" requires a developer statement this analysis does not have for any specific title, and none is asserted here. Per the causality test this analysis applies throughout, the correct phrasing is that such systems <strong>are consistent with</strong> variable-ratio conditioning, not that any particular studio <strong>confirmed</strong> designing around it.</p>
+<p><strong>Cognitive Load Theory and Flow.</strong> Sweller's Cognitive Load Theory and Csikszentmihalyi's Flow model are both well-established, decades-old academic frameworks. <strong>Confidence: Confirmed</strong> as theory. Their application to specific design practices — gating mechanics behind level thresholds to manage cognitive load, tuning challenge-to-skill ratio to preserve flow — is a widely repeated and reasonable <em>interpretation</em> of those frameworks, but individual claims about a specific game's pacing achieving "flow" are not independently testable from outside the studio and are labeled as interpretation, not measurement.</p>
+<p><strong>The Zeigarnik Effect.</strong> The Zeigarnik Effect — the tendency to better remember interrupted or incomplete tasks — originates from Bluma Zeigarnik's 1927 studies. It is worth noting, and the earlier draft of this article did not, that modern replication attempts of the classic Zeigarnik findings have produced inconsistent results, and the original methodology has been criticized by later researchers. Its application to quest logs and partially-filled XP bars is a popular and plausible design analogy repeated in game-psychology writing, but it is not the product of a controlled study of quest-log design specifically. <strong>Confidence: Weak inference</strong> for the applied game-design claim, despite the underlying effect being historically well known.</p>
+<h3>3.3 Vertical vs. horizontal progression and economic sinks</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Vertical Progression</th>
+<th>Horizontal Progression</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Definition</td>
+<td>Direct numerical inflation of stats/gear power</td>
+<td>Lateral expansion of options, utility, cosmetics</td>
+</tr>
+<tr>
+<td>Legacy content</td>
+<td>Rapidly obsoleted</td>
+<td>Stays relevant</td>
+</tr>
+<tr>
+<td>Player-base friction</td>
+<td>High (stat gaps between veterans/newcomers)</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>Main failure mode</td>
+<td>Power creep, stat inflation</td>
+<td>Choice overload, muted feedback</td>
+</tr>
+</tbody>
+</table>
+<p>This distinction, and the associated concepts of power creep and resource sinks (mechanics that permanently remove currency/materials to counter inflation from rising player efficiency), are extensively documented in live-service and MMO economy design writing. <strong>Confidence: Strong inference to confirmed</strong> for the general mechanisms. No specific numeric inflation claim about any single game is asserted here, consistent with none being sourced in the original material.</p>
+<hr />
+<h2>4. Case Studies</h2>
+<h3>4.1 Resident Evil 4 — the hidden "Rank" system</h3>
+<p>Resident Evil 4 is widely cited as an early, influential example of invisible real-time difficulty adjustment. Community analysis (the Resident Evil Fandom wiki's "Game Rank" page and independent speedrunning-community technical write-ups) describes a background score that shifts based on player performance: landing hits and evading attacks raises it; getting hit, missing, and — most heavily — using a continue lowers it. Higher rank is described as increasing enemy damage and evasiveness while reducing the damage the player deals; lower rank does the reverse and increases beneficial item drops.</p>
+<p><strong>This needs an important qualification the earlier draft omitted.</strong> No official Capcom developer interview, GDC talk, or technical document confirming the exact rank range, a default starting value, or the precise numeric weighting of each trigger was located during this research pass. Everything specific about RE4's rank system that circulates publicly — including figures like "ten discrete ranks" or "rank 6 by default" — traces back to community reverse-engineering and observational play analysis, not a Capcom-confirmed source.</p>
+<ul>
+<li><strong>Confidence in the system's existence and general direction of effect:</strong> Strong inference — it is independently corroborated across multiple unrelated community analyses and is observable in play.</li>
+<li><strong>Confidence in specific numeric parameters (rank count, default value, exact multipliers):</strong> Weak inference / unverified. These should be read as community-estimated, not developer-confirmed.</li>
+</ul>
+<p>The design logic attributed to the system — keep struggling players from getting stuck, keep dominant players challenged, without ever surfacing the mechanism to preserve the feeling that outcomes reflect the player's own skill — is a reasonable <em>interpretation</em> consistent with the observed behavior, not a quoted design rationale from Capcom.</p>
+<h3>4.2 A documented real-time DDA framework (Skyrim boss-battle research, 2026)</h3>
+<p>The mathematical DDA model in the earlier draft — a "dominance ratio" R = D<sub>n</sub>/(D<sub>n</sub>+D<sub>p</sub>) built from player-damage-taken and boss-damage-dealt rates, smoothed with an exponential filter D<sub>new</sub> = D<sub>current</sub> + α×(D<sub>raw</sub> − D<sub>current</sub>) at α = 0.45 — is real, but it was misattributed. It does not describe a generalized industry standard, and it is not connected to Resident Evil 4. It comes from a specific, identifiable, peer-reviewed source:</p>
+<blockquote>
+<p>Klarkowski et al., "A Modular Framework for Dynamic Difficulty Adjustment in Boss Battles: A Case Study in <em>The Elder Scrolls V: Skyrim</em>," <em>Applied Sciences</em> (MDPI), vol. 16, no. 15, article 7554 (2026).</p>
+</blockquote>
+<p>That paper proposes a modular DDA framework for boss encounters, tested via a Skyrim case study, with a difficulty range constrained to [1.0, 1.35], phase thresholds at 1.10/1.20/1.28, a 0.07 step size per adjustment, a 1.6× "dominance boost" multiplier when the target difficulty exceeds current difficulty by more than 0.10, and a 10-second cooldown between updates.</p>
+<ul>
+<li><strong>Confidence: Confirmed — as this paper's proposed model.</strong> It is a real, citable, peer-reviewed formula.</li>
+<li><strong>Confidence that this represents "how DDA generally works" industry-wide: Not supported.</strong> It is one research team's framework, validated in one case study, not a documented description of how any specific commercial game engine (including Resident Evil 4's) actually implements difficulty adjustment internally.</li>
+</ul>
+<p>Presenting this formula immediately after the RE4 case study, as the earlier draft did, created a false impression that the two were connected or that the formula explains RE4's engine behavior. No evidence supports that link, and this revision separates the two cases explicitly.</p>
+<h3>4.3 Pseudo-Random Distribution — Dota 2</h3>
+<p>Valve's Dota 2 uses a documented alternative to true independent-probability rolls for proc-based effects (critical strikes, on-hit abilities). Instead of a constant chance each trial, the probability of success on the <em>N</em>-th attempt since the last success is P(N) = C×N, where C is a constant lower than the nominal listed rate. Each failure increases the next attempt's probability by C; a success resets the counter.</p>
+<p>The C constants themselves (approximately 0.38% for a nominal 5% effect, roughly 1.5% for a nominal 10% effect, and so on) were <strong>derived by the community</strong> — through empirical play-data logging cross-checked against a mathematical derivation, not published by Valve as a raw formula. Valve has acknowledged using "bad luck protection" in general terms without publishing the underlying constants.</p>
+<ul>
+<li><strong>Confidence: Strong inference</strong> for the mechanism and formula shape (extremely high internal consistency across large empirical samples); <strong>not</strong> developer-published documentation.</li>
+</ul>
+<h3>4.4 Gacha pity systems — soft/hard pity as exemplified by Genshin Impact</h3>
+<p>Soft-pity/hard-pity structures — a rising success probability that begins ramping well before a hard cap, followed by a guaranteed drop at the cap — are common across gacha-monetized games. Genshin Impact is the most extensively documented public example: independent large-sample pull trackers converge on a hard pity of 90 pulls for character banners and a soft-pity ramp beginning around pull 74, with most 5-star rewards landing around pulls 75–78 in practice.</p>
+<p>HoYoverse has publicly confirmed some aggregate figures (e.g., a roughly 55% consolidated rate under its "Capturing Radiance" mechanic as of the version-5.0-era update) but has not published the exact soft-pity ramp curve or its underlying constant. <strong>Confidence: Strong inference</strong> — very large, independently-collected samples are highly consistent — but these are community-measured figures, not official developer documentation, and pull-74/pull-90 should be read as <em>a</em> well-documented example rather than <em>the</em> universal gacha standard.</p>
+<hr />
+<h2>5. Counterarguments and Alternative Interpretations</h2>
+<p>A fair reading of this subject has to grant several points that cut against the framing above:</p>
+<p><strong>The taxonomy is a convenience, not a discovery.</strong> The six-paradigm table in Section 2 is a useful organizing device, but it is authored for this article, not drawn from a single citable industry standard. A different analyst could split "item-based" and "crafting-based" progression, or fold "narrative" into "hybrid," and produce an equally defensible scheme. Readers should treat it as a lens, not a taxonomy with independent empirical status.</p>
+<p><strong>Academic frameworks describe player experience, not proven designer intent.</strong> PENS, Cognitive Load Theory, and Flow are genuinely well-supported psychological models — but citing them to explain <em>why</em> a level-gating system or an XP curve exists risks reverse-engineering intent from outcome. A designer may have arrived at the same structure through playtesting and iteration without ever invoking Ryan, Rigby, Sweller, or Csikszentmihalyi by name. The frameworks are a legitimate <em>lens</em> for analysis; they are not evidence of what any specific studio was thinking.</p>
+<p><strong>The strongest counter-evidence concerns the Zeigarnik Effect specifically.</strong> Because the classic 1927 findings have replicated inconsistently in later research, building confident claims about quest-log retention on the Zeigarnik Effect is weaker ground than the earlier draft implied. A competing, equally plausible explanation for why partially-completed quest logs and near-full XP bars correlate with return sessions is simple <strong>loss aversion or sunk-cost framing</strong> — players return to avoid "wasting" progress already made, a distinct behavioral-economics mechanism that does not require invoking Zeigarnik at all. Both explanations are consistent with the same observed behavior, and this analysis cannot adjudicate between them with the evidence available.</p>
+<p><strong>PRD and pity systems are frequently over-generalized.</strong> Community-reverse-engineered constants from one game (Dota 2's PRD constants, Genshin's pull-74/pull-90 pity) are sometimes cited as if they describe an industry-wide standard. They describe those specific, well-documented implementations. Other games' probabilistic systems may use different constants, different ramp shapes, or true independent randomness with no pity mechanism at all — this article makes no claim about titles that were not directly researched.</p>
+<p><strong>The RE4/DDA-paper pairing in the earlier draft is a clear case of unsupported causal linking.</strong> Presenting a 2026 academic Skyrim-modding paper's formula directly after a 2005 game's community-reverse-engineered rank system implied a connection — shared methodology, shared industry standard — that the evidence does not support. This is exactly the kind of "common industry practice incorrectly attributed to a specific game" error the causality test is designed to catch, and it was present in the source material this analysis was asked to check.</p>
+<hr />
+<h2>6. Limitations</h2>
+<p>This analysis is limited by what is publicly documented. Internal engine code, telemetry dashboards, and design documents for the specific games discussed are not available to outside researchers, including this one. Where this piece states "confirmed," it means confirmed <em>in a public, citable source</em> — not independently verified against a studio's source code. Community reverse-engineering (RE4's rank system, Dota 2's PRD constants, gacha pity ramps) is often highly reliable at the level of large-sample statistical convergence, but it is not the same evidentiary category as a developer-published specification, and this piece has tried to keep that distinction visible rather than flattening it for readability.</p>
+<p>This analysis also could not verify the specific formula ΔE(L) = ((8×L) + Diff(L)) × MXP(L) × RF(L) from the original draft against any primary source, and removed it rather than presenting it as real. It is possible such a formula exists in an undocumented or non-English-language source not surfaced by this research pass; if a reader has a primary citation for it, it should be reinstated with that citation attached, not restored from memory.</p>
+<hr />
+<h2>7. Conclusion</h2>
+<p><strong>What we know:</strong> The mathematical relationship between cumulative and incremental XP is a definitional identity. PENS/Self-Determination Theory is a real, peer-reviewed framework connecting competence/autonomy/relatedness to player motivation. Operant conditioning's variable-ratio schedule is a well-established mechanism with peer-reviewed evidence connecting it to loot-reveal engagement. Dota 2's pseudo-random distribution and Genshin Impact's soft/hard pity are real, well-documented (if community-derived) systems. A 2026 peer-reviewed paper proposes a specific, citable dominance-ratio DDA formula for Skyrim boss battles.</p>
+<p><strong>What we think:</strong> Curve-family choice (linear/polynomial/exponential/sigmoidal) maps to genre in the pattern described, based on strong but Tier-3 design-practice consensus. Resident Evil 4 almost certainly runs some form of invisible rank-based difficulty adjustment, based on strongly convergent community analysis, though its exact parameters remain unconfirmed by the developer. Vertical/horizontal progression's economic consequences (power creep, resource sinks) follow the described pattern in live-service design writing generally.</p>
+<p><strong>What we don't know:</strong> Whether any specific named game's designers consciously invoked Skinner, Zeigarnik, or Csikszentmihalyi when building their systems. Whether the Zeigarnik Effect, given its replication problems, is actually the correct explanation for quest-log retention behavior as opposed to loss-aversion framing. Whether Resident Evil 4's rank system uses exactly ten levels with a default of six, or any other undocumented internal detail. Whether the Skyrim-paper DDA formula, or anything resembling it, is used in any shipped commercial game engine.</p>
+<hr />
+<h2>8. Sources</h2>
+<ul>
+<li>Ryan, R. M., Rigby, C. S., &amp; Przybylski, A. — PENS model; selfdeterminationtheory.org, "<a href="https://selfdeterminationtheory.org/player-experience-of-needs-satisfaction-pens/">Player Experience of Needs Satisfaction (PENS)</a>"</li>
+<li>Klarkowski et al., "<a href="https://www.mdpi.com/2076-3417/16/15/7554">A Modular Framework for Dynamic Difficulty Adjustment in Boss Battles: A Case Study in The Elder Scrolls V: Skyrim</a>," Applied Sciences (MDPI), 16(15):7554, 2026</li>
+<li>Resident Evil Fandom Wiki, "<a href="https://residentevil.fandom.com/wiki/Game_Rank_(RE4)">Game Rank (RE4)</a>"</li>
+<li>Speedrun.com, "<a href="https://www.speedrun.com/re4console/guides/3sahj">Rank / Difficulty adjustment analysis — Resident Evil 4</a>"</li>
+<li>Dota 2 Fandom Wiki, "<a href="https://dota2.fandom.com/wiki/Random_Distribution">Random Distribution</a>"; Liquipedia, "<a href="https://liquipedia.net/dota2/Pseudo_Random_Distribution">Pseudo Random Distribution</a>"</li>
+<li>PlayAware, "<a href="https://playaware.gg/guides/genshin-pity">Genshin Impact pity system guide</a>"</li>
+<li>PMC/NIH, "<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7882574/">Rare Loot Box Rewards Trigger Larger Arousal and Reward Responses</a>"</li>
+<li>Psychology Today, "<a href="https://www.psychologytoday.com/us/blog/mind-games/201303/the-zeigarnik-effect-and-quest-logs-8">The Zeigarnik Effect and Quest Logs</a>" (popular-press application; see Limitations for replication caveats on the underlying effect)</li>
+<li>Full internal audit: <code>research/claim-ledger.md</code> (this project folder)</li>
+</ul>
+</body></html>
