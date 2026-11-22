@@ -48,10 +48,9 @@ Each folder holds the article page, its charts and tables (`images/`), a 9:16 sh
 
 ## Other pages in this repo
 
-- [RDR2 review](rdr2-review.html)
-- [Infinity Loop essay](infinity-loop-essay.html)
-- [Unity C# course](unity_course.html)
-- [Game animation teachnar](teachnar_game_animation.html)
+- Essays: [Arthur Morgan's Redemption Ride (RDR2 review)](essays/rdr2-review.html), [The Infinity Loop](essays/infinity-loop-essay.html)
+- Courses and tutorials: [Unity C# course](courses/unity_course.html), [How Game Characters Move (Teachnar)](courses/teachnar_game_animation.html)
+- Demos: [Catopia](demos/catopia.html)
 - [Policy documents](policies): privacy policies for my apps and games (general, Cold, Base Clicker).
 
 Articles are also published on Substack: [zebonastic.substack.com](https://zebonastic.substack.com)
