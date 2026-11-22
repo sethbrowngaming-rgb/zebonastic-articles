@@ -49,7 +49,7 @@ Each folder holds the article page, its charts and tables (`images/`), a 9:16 sh
 ## Other pages in this repo
 
 - Essays: [Arthur Morgan's Redemption Ride (RDR2 review)](essays/rdr2-review.html), [The Infinity Loop](essays/infinity-loop-essay.html)
-- Courses and tutorials: [Unity C# course](courses/unity_course.html), [How Game Characters Move (Teachnar)](courses/teachnar_game_animation.html)
+- Courses and tutorials: [Unity C# Full Course (14 lessons)](courses/unity-csharp-full-course.html), [How Game Characters Move (Teachnar)](courses/teachnar_game_animation.html)
 - Demos: [Catopia](demos/catopia.html)
 - [Policy documents](policies): privacy policies for my apps and games (general, Cold, Base Clicker).
 
