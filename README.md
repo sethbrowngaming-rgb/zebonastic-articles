@@ -1,5 +1,7 @@
 # Zebonastic Articles
 
+**Website: [sethbrowngaming-rgb.github.io/zebonastic-articles](https://sethbrowngaming-rgb.github.io/zebonastic-articles/)**
+
 All of my Game Research Writer (GRW) articles live in this repository. Each one is evidence-graded: every major claim is traced to a source in a claim ledger, and the writing separates what is known, what is inferred and what is not known.
 
 ## Latest articles (HTML, with charts, short video and claim ledger)
