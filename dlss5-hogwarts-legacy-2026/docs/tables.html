@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+body{margin:0;padding:20px;background:#fcfcfb;font-family:"DM Sans",sans-serif;color:#0b0b0b}
+.t{width:1160px;border:3px solid #0b0b0b;background:#fcfcfb;margin-bottom:30px}
+.t h3{margin:0;padding:12px 16px;background:#0b0b0b;color:#fcfcfb;font:700 20px "DM Sans",sans-serif;letter-spacing:.02em}
+.t p.sub{margin:0;padding:8px 16px;font-size:14px;color:#52514e;border-bottom:2px solid #0b0b0b}
+table{border-collapse:collapse;width:100%}
+th{background:#eb6834;color:#0b0b0b;text-align:left;padding:9px 14px;font-size:15px;border-bottom:2px solid #0b0b0b;border-right:2px solid #0b0b0b}
+td{padding:10px 14px;font-size:16px;line-height:1.35;vertical-align:top;border-bottom:1.5px solid #0b0b0b;border-right:2px solid #0b0b0b}
+th:last-child,td:last-child{border-right:none} tr:last-child td{border-bottom:none}
+td.d{white-space:nowrap;font-weight:700;width:110px}
+.k td:first-child{font-weight:700;width:190px;background:#f0efec}
+</style></head><body>
+<div class="t" id="t1"><h3>TABLE 1 — DLSS 5 TIMELINE, AS DOCUMENTED</h3><p class="sub">Dates from Nvidia and the outlets named. 2026.</p>
+<table><tr><th>Date</th><th>Event</th><th>Source (tier)</th></tr>
+<tr><td class="d">Mar 16</td><td>Nvidia unveils DLSS 5 at GTC; names launch games; Nvidia and outlets describe developer intensity and color-grading controls (masking also appears on Nvidia's page).</td><td>Nvidia GeForce news (Tier 1)</td></tr>
+<tr><td class="d">Mar 19</td><td>PC Gamer relays anonymous Ubisoft and Capcom developer comments, via Insider Gaming, that they learned of the reveal alongside the public.</td><td>PC Gamer (Tier 2; anonymous, secondhand)</td></tr>
+<tr><td class="d">Sep 3</td><td>NBA 2K27 becomes the first game with official DLSS 5 support.</td><td>Nvidia GeForce news (Tier 1)</td></tr>
+<tr><td class="d">Oct 16</td><td>Nvidia ships a smaller October model (about 118M parameters) it says needs roughly half the GPU time.</td><td>PC Games Hardware; Nvidia (Tier 1–2; vendor claim)</td></tr>
+<tr><td class="d">Nov 5</td><td>Hogwarts Legacy ships a "Neural Rendering" option on RTX 50-series, RTX Spark and GeForce NOW Ultimate.</td><td>Nvidia GeForce news (Tier 1)</td></tr>
+<tr><td class="d">Nov 23</td><td>Where Winds Meet is scheduled to follow; War Thunder is slated for mid-November.</td><td>Nvidia GeForce news (Tier 1)</td></tr>
+</table></div>
+
+<div class="t" id="t2"><h3>TABLE 2 — CONTROLS NVIDIA SAYS DEVELOPERS AND PLAYERS HAVE</h3><p class="sub">Nvidia's own description (Nov 5 post). These are vendor statements, not independent verification.</p>
+<table><tr><th>Control</th><th>What Nvidia says it does</th><th>Who holds it</th></tr>
+<tr><td>Model selection</td><td>Several models with different parameter weights; used game-wide or mixed by scene (e.g. outdoors vs. indoors, gameplay vs. cutscenes).</td><td>Developer</td></tr>
+<tr><td>Structure Intensity</td><td>Adjusts high-frequency detail: ambient occlusion, reflections, subsurface scattering.</td><td>Developer</td></tr>
+<tr><td>Tone Intensity</td><td>Adjusts broad lighting and color. At zero, the output shows the engine's own frame colors.</td><td>Developer</td></tr>
+<tr><td>Semantic AI masking</td><td>Recognizes scene objects so environments can be enhanced while characters are held back, or the reverse; can mask faces or skip enhancement.</td><td>Developer</td></tr>
+<tr><td>Engine-level masking</td><td>Isolates props or asset groups (glassware, water droplets, foliage) from the neural pass.</td><td>Artists</td></tr>
+<tr><td>Player toggle</td><td>A simple on/off option.</td><td>Player</td></tr>
+</table></div>
+
+<div class="t k" id="t3"><h3>TABLE 3 — WHAT WE KNOW, THINK, AND DON'T KNOW</h3><p class="sub">Status as of Nov 22, 2026, based on sources the author could retrieve.</p>
+<table><tr><th>Status</th><th>Statement</th></tr>
+<tr><td>WHAT WE KNOW</td><td>In March, Nvidia and several outlets described developer intensity and color-grading controls. Hogwarts Legacy shipped DLSS 5 on Nov 5, and Avalanche says it tuned environment lighting, tone and skin structural parameters. Nvidia's current documentation says faces can be masked out. Independent tests of the September model on an RTX 5090 at 4K measured 51–60% frame-rate loss.</td></tr>
+<tr><td>WHAT WE THINK</td><td>Nvidia's promotional Hogwarts comparisons concentrate on environmental lighting and materials, and faces look essentially unchanged in them. The difference from March may reflect settings chosen for this game, a retrained model, or both; the sources do not separate them. Cost on the shipped build looks lower than in the September NBA 2K27 tests, but the data cannot separate model improvement from game and scene differences.</td></tr>
+<tr><td>WHAT WE DON'T KNOW</td><td>Whether the shipped build changes characters in motion or in every scene. Why Avalanche chose its settings. Whether the claimed 2x speedup holds below the RTX 5090. Whether players prefer the result.</td></tr>
+</table></div></body></html>
