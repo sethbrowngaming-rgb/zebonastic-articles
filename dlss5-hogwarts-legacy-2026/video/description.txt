@@ -1,0 +1,11 @@
+Title: DLSS 5 in Hogwarts Legacy: What the Evidence Does and Doesn't Show
+
+In March, critics said Nvidia's DLSS 5 rewrote character faces. On November 5, Hogwarts Legacy shipped it, and Nvidia's own comparison images show a gentler presentation.
+
+Does that settle the artistic-intent question? The sources document the difference, not the reason. It could be developer settings, a retrained model, or both. Independent performance tests so far are limited, and the numbers in this video come from different games and scenes, so they are not a like-for-like comparison.
+
+Full article with sources, charts and claim ledger: [PASTE ARTICLE LINK HERE]
+
+Sources include Nvidia's published DLSS 5 posts, PCWorld, PC Gamer, TechSpot, Notebookcheck (Digital Foundry data) and DSOGaming. Every source is listed in the article.
+
+#DLSS5 #HogwartsLegacy #Nvidia #PCGaming #GameDev
