@@ -10,6 +10,7 @@ Each folder holds the article page, its charts and tables (`images/`), a 9:16 sh
 
 | Date | Article | Folder |
 |---|---|---|
+| Nov 22, 2026 | [The Restraint Question](https://sethbrowngaming-rgb.github.io/zebonastic-articles/dlss5-hogwarts-legacy-2026/the-restraint-question.html) | [`dlss5-hogwarts-legacy-2026`](dlss5-hogwarts-legacy-2026) |
 | Nov 21, 2026 | [Fewer Consoles, More Games?](https://sethbrowngaming-rgb.github.io/zebonastic-articles/fewer-consoles-more-games-2026/fewer-consoles-more-games.html) | [`fewer-consoles-more-games-2026`](fewer-consoles-more-games-2026) |
 | Nov 20, 2026 | [Two Ledgers, One Market](https://sethbrowngaming-rgb.github.io/zebonastic-articles/two-ledgers-one-market/two-ledgers-one-market.html) | [`two-ledgers-one-market`](two-ledgers-one-market) |
 | Nov 19, 2026 | [The Memory Squeeze](https://sethbrowngaming-rgb.github.io/zebonastic-articles/memory-squeeze-2026/the-memory-squeeze.html) | [`memory-squeeze-2026`](memory-squeeze-2026) |
