@@ -1,0 +1,11 @@
+Title: Does 49.9% of Steam Use AI? What the Number Actually Counts
+
+49.9% of games released on Steam in October 2026 carried an AI disclosure. That is one month. For 2026 so far it is 40.5%.
+
+The flag is self-reported. It covers AI content players see or hear, not coding tools, and it can't say how much AI a game used. Flagged releases grew from 2,319 in 2024 to 12,351 in 2026 so far, but the sources don't establish why: more AI use, more disclosure, a different release mix, or the January 2026 rule change.
+
+Full article with sources, charts and claim ledger: [PASTE ARTICLE LINK HERE]
+
+Sources include Valve's Steamworks documentation, the PCGame.com statistics page, Dexerto, PC Gamer, Tom's Hardware (Totally Human Media) and GDC's 2026 State of the Game Industry. Every source is listed in the article.
+
+#Steam #AI #GameDev #IndieDev #PCGaming
